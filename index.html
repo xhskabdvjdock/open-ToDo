@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>جدول العطلة الذكي | تعاون كامل</title>
-    <!-- Font Awesome 6 -->
+    <title>دليل العطلة | نشاطات وأفلام وألعاب</title>
+    <!-- Font Awesome 6 (أيقونات حديثة) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts (Cairo) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Cairo + Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <!-- SortableJS -->
@@ -20,728 +20,654 @@
         }
 
         body {
-            font-family: 'Cairo', sans-serif;
-            background: var(--bg-gradient);
-            transition: all 0.3s ease;
-            min-height: 100vh;
+            font-family: 'Cairo', 'Inter', sans-serif;
+            background-color: #f5f7fb;
+            transition: background-color 0.25s ease, color 0.2s ease;
+            color: #1e293b;
         }
 
-        /* متغيرات الألوان - الوضع الفاتح */
-        :root {
-            --bg-gradient: linear-gradient(135deg, #f0f4fa 0%, #d9e2ec 100%);
-            --card-bg: rgba(255, 255, 255, 0.96);
-            --text-primary: #1e2f3f;
-            --text-secondary: #2c4b63;
-            --border-light: #e2e8f0;
-            --accent: #2c5f8a;
-            --accent-hover: #1e4668;
-            --orange-accent: #f4a261;
-            --danger: #e53e3e;
-            --success: #2c7a4d;
-            --sidebar-bg: #ffffffdd;
-            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
-            --input-bg: #ffffff;
-        }
-
-        /* الوضع المظلم */
+        /* الوضع المظلم - تصميم عميق وأنيق */
         body.dark {
-            --bg-gradient: linear-gradient(135deg, #1a2a3a 0%, #0f1a24 100%);
-            --card-bg: #1e2f3fcc;
-            --text-primary: #f0f4fa;
-            --text-secondary: #cbd5e1;
-            --border-light: #334155;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --orange-accent: #f97316;
-            --sidebar-bg: #1e293bdd;
-            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
-            --input-bg: #2d3e4e;
+            background-color: #0f1724;
+            color: #eef2ff;
         }
 
-        /* شاشة تسجيل الدخول */
-        .auth-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* شاشة الدخول - كارت أنيق */
+        .auth-wrapper {
             min-height: 100vh;
-            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: radial-gradient(circle at 10% 30%, rgba(44, 95, 138, 0.08), rgba(244, 162, 97, 0.05));
         }
 
         .auth-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            border-radius: 2rem;
-            padding: 2rem 1.8rem;
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(0px);
+            border-radius: 2.5rem;
+            padding: 2.5rem 2rem;
             width: 100%;
-            max-width: 450px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            border: 1px solid var(--border-light);
+            max-width: 480px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            transition: all 0.2s;
+            border: 1px solid #eef2ff;
+        }
+        body.dark .auth-card {
+            background: #1e2a3e;
+            border-color: #2d3e56;
+            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .auth-card .icon {
+        .auth-icon {
+            text-align: center;
             font-size: 3rem;
-            color: var(--orange-accent);
+            color: #f4a261;
             margin-bottom: 1rem;
         }
-
         .auth-card h2 {
-            color: var(--text-primary);
+            font-size: 1.9rem;
+            font-weight: 700;
+            text-align: center;
             margin-bottom: 1.5rem;
-            font-size: 1.8rem;
+            letter-spacing: -0.3px;
         }
-
-        .auth-card input {
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        .input-group input {
             width: 100%;
-            padding: 12px 18px;
-            margin: 10px 0;
-            border: 1px solid var(--border-light);
-            border-radius: 60px;
-            background: var(--input-bg);
-            color: var(--text-primary);
+            padding: 1rem 1.2rem;
+            background: #ffffff;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 1.5rem;
             font-size: 1rem;
             font-family: inherit;
-            outline: none;
             transition: 0.2s;
         }
-
-        .auth-card input:focus {
-            border-color: var(--orange-accent);
-            box-shadow: 0 0 0 2px rgba(244, 162, 97, 0.2);
+        body.dark .input-group input {
+            background: #0f1724;
+            border-color: #2d3e56;
+            color: #f1f5f9;
         }
-
-        .remember-me {
+        .input-group input:focus {
+            outline: none;
+            border-color: #f4a261;
+            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
+        }
+        .checkbox-group {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 15px 0;
-            justify-content: flex-start;
-            color: var(--text-secondary);
+            gap: 0.5rem;
+            margin: 1rem 0;
         }
-
-        .remember-me input {
-            width: 18px;
-            margin: 0;
+        .auth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
         }
-
-        .auth-card button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            border: none;
-            border-radius: 60px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-
         .btn-primary {
-            background: var(--accent);
+            background: #1e4668;
+            border: none;
+            padding: 0.9rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
             color: white;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-
         .btn-primary:hover {
-            background: var(--accent-hover);
+            background: #0f2f4a;
+            transform: translateY(-2px);
         }
-
         .btn-secondary {
             background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+            border: 1.5px solid #1e4668;
+            padding: 0.9rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            color: #1e4668;
+            cursor: pointer;
         }
-
-        .btn-secondary:hover {
-            background: var(--accent);
-            color: white;
+        body.dark .btn-secondary {
+            border-color: #f4a261;
+            color: #f4a261;
         }
-
         .error-msg {
-            color: var(--danger);
+            color: #e53e3e;
             font-size: 0.85rem;
-            margin: 5px 0;
+            margin-top: 0.5rem;
+            text-align: center;
         }
 
-        /* التطبيق الرئيسي */
-        .app-wrapper {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* الشريط الجانبي */
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            backdrop-filter: blur(12px);
-            border-left: 1px solid var(--border-light);
-            padding: 1.5rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        .sidebar-header h3 {
-            font-size: 1.3rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stats-panel {
-            background: var(--card-bg);
-            border-radius: 1.2rem;
-            padding: 1rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
-
-        .stats-panel h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        canvas {
-            max-height: 140px;
-            width: 100%;
-        }
-
-        .sidebar-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar-buttons button {
-            width: 100%;
-        }
-
-        /* المحتوى الرئيسي */
-        .main-content {
-            flex: 1;
+        /* التطبيق الرئيسي - تصميم حديث */
+        .app-layout {
+            max-width: 1400px;
+            margin: 0 auto;
             padding: 1.5rem;
         }
-
-        .top-bar {
+        /* شريط علوي أنيق */
+        .app-header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            padding: 0.8rem 2rem;
+            margin-bottom: 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            background: var(--card-bg);
-            padding: 0.8rem 1.5rem;
-            border-radius: 1.5rem;
-            margin-bottom: 1.8rem;
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
-
-        .user-greeting {
-            font-weight: 500;
-            color: var(--text-primary);
+        body.dark .app-header {
+            background: rgba(30, 42, 62, 0.8);
+            border-color: #2d3e56;
         }
-
-        .user-actions {
+        .logo-area h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1e4668, #f4a261);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .user-controls {
             display: flex;
-            gap: 12px;
+            gap: 0.8rem;
+            align-items: center;
         }
-
-        .btn-icon {
-            background: transparent;
-            border: 1px solid var(--border-light);
-            padding: 6px 12px;
-            border-radius: 40px;
+        .btn-soft {
+            background: rgba(0,0,0,0.05);
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             cursor: pointer;
-            color: var(--text-primary);
-            transition: 0.1s;
+        }
+        body.dark .btn-soft {
+            background: #2d3e56;
+            color: #eef2ff;
         }
 
-        /* فئات المهام */
-        .categories-grid {
+        /* شبكة المحتوى + الشريط الجانبي */
+        .dashboard-grid {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        .sidebar-stats {
+            flex: 1.2;
+            min-width: 260px;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        body.dark .sidebar-stats {
+            background: rgba(30, 42, 62, 0.6);
+            border-color: #2d3e56;
+        }
+        .stat-card {
+            margin-bottom: 2rem;
+        }
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        canvas {
+            max-height: 160px;
+            width: 100%;
+        }
+        .share-buttons {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
         }
-
-        .category-card {
-            background: var(--card-bg);
+        .share-buttons button {
+            width: 100%;
+            padding: 0.7rem;
             border-radius: 1.5rem;
-            overflow: hidden;
-            backdrop-filter: blur(4px);
+            background: rgba(0,0,0,0.05);
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
         }
-
-        .category-header {
-            padding: 1rem 1.5rem;
-            background: rgba(0,0,0,0.03);
-            border-bottom: 3px solid var(--accent);
+        .content-area {
+            flex: 3;
+            min-width: 260px;
+        }
+        /* فئات المهام */
+        .category-block {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.8rem;
+            margin-bottom: 1.8rem;
+            overflow: hidden;
+            transition: 0.1s;
+        }
+        body.dark .category-block {
+            background: rgba(30, 42, 62, 0.6);
+        }
+        .category-head {
+            padding: 1rem 1.8rem;
+            background: rgba(0,0,0,0.02);
+            border-bottom: 2px solid;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: baseline;
         }
-
-        .category-header h3 {
-            font-size: 1.3rem;
+        .category-head.games { border-bottom-color: #3b82f6; }
+        .category-head.movies { border-bottom-color: #ef4444; }
+        .category-head.series { border-bottom-color: #8b5cf6; }
+        .cat-title {
+            font-size: 1.4rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
         }
-
         .item-list {
             padding: 1rem;
-            min-height: 100px;
+            min-height: 180px;
         }
-
-        .check-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 1rem;
-            padding: 0.7rem 1rem;
-            margin-bottom: 8px;
+        .task-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            border: 1px solid var(--border-light);
+            gap: 1rem;
+            background: rgba(255,255,255,0.5);
+            margin-bottom: 0.7rem;
+            padding: 0.7rem 1rem;
+            border-radius: 1.2rem;
+            backdrop-filter: blur(2px);
+            transition: all 0.15s;
+            border: 1px solid rgba(0,0,0,0.03);
             cursor: grab;
         }
-        .check-item:active { cursor: grabbing; }
-
-        .item-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--orange-accent);
+        body.dark .task-item {
+            background: #1e2a3e;
         }
-
-        .item-info {
+        .task-item:hover {
+            transform: translateX(-4px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+        }
+        .task-check {
+            width: 1.3rem;
+            height: 1.3rem;
+            accent-color: #f4a261;
+        }
+        .task-info {
             flex: 1;
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 0.5rem;
             align-items: baseline;
         }
-
-        .item-name {
-            font-weight: 600;
-        }
-
-        .spec-badge {
-            font-size: 0.7rem;
-            background: rgba(0,0,0,0.1);
-            padding: 2px 8px;
-            border-radius: 30px;
-        }
-
-        .delete-item {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
+        .task-name {
+            font-weight: 700;
             font-size: 1rem;
         }
-
-        .add-panel {
+        .task-spec {
+            font-size: 0.7rem;
+            background: rgba(0,0,0,0.07);
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+        }
+        .delete-task {
+            background: none;
+            border: none;
+            color: #e53e3e;
+            font-size: 1rem;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .add-task-panel {
             margin-top: 2rem;
-            background: var(--card-bg);
+            background: rgba(255,255,255,0.6);
             border-radius: 1.5rem;
             padding: 1.2rem;
         }
-
-        .form-row {
+        body.dark .add-task-panel {
+            background: #1e2a3e;
+        }
+        .flex-form {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 0.8rem;
             align-items: flex-end;
         }
-
-        .field {
+        .flex-form input, .flex-form select {
             flex: 2;
-            min-width: 130px;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid #cbd5e1;
+            background: white;
         }
-        .field input, .field select {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 60px;
-            border: 1px solid var(--border-light);
-            background: var(--input-bg);
-            color: var(--text-primary);
-        }
-
-        .btn {
-            background: var(--accent);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 40px;
+        body.dark .flex-form input, body.dark .flex-form select {
+            background: #0f1724;
+            border-color: #2d3e56;
             color: white;
-            cursor: pointer;
-            font-weight: 600;
         }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
+        .btn-add {
+            background: #2c5f8a;
+            border: none;
+            padding: 0.7rem 1.6rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
         }
-
-        /* للجوال */
-        @media (max-width: 768px) {
-            .sidebar {
-                position: fixed;
-                right: -280px;
-                z-index: 1000;
-                transition: right 0.3s;
-                height: 100vh;
-            }
-            .sidebar.open {
-                right: 0;
-            }
-            .app-wrapper { flex-direction: column; }
-            .menu-toggle {
-                display: flex;
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                z-index: 1001;
-                background: var(--accent);
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                align-items: center;
-                justify-content: center;
-                box-shadow: var(--shadow);
-                cursor: pointer;
-            }
+        @media (max-width: 860px) {
+            .dashboard-grid { flex-direction: column; }
+            .sidebar-stats { position: static; width: 100%; }
+            .app-header { flex-direction: column; align-items: stretch; }
         }
-        .menu-toggle { display: none; }
+        .floating-mobile-btn {
+            display: none;
+            position: fixed;
+            bottom: 1.5rem;
+            left: 1.5rem;
+            background: #1e4668;
+            border-radius: 3rem;
+            padding: 0.8rem 1.2rem;
+            color: white;
+            z-index: 99;
+            gap: 0.5rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 640px) {
+            .floating-mobile-btn { display: flex; }
+            .sidebar-stats { display: none; }
+            .sidebar-stats.open-mobile { display: block; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg); margin: 1rem; }
+        }
     </style>
 </head>
 <body>
 
 <!-- شاشة تسجيل الدخول -->
-<div id="authScreen" class="auth-screen">
-    <div class="auth-card">
-        <div class="icon"><i class="fas fa-calendar-alt"></i></div>
-        <h2>مرحباً بك في جدول العطلة</h2>
-        <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="off">
-        <input type="password" id="loginPassword" placeholder="كلمة المرور">
-        <div class="remember-me">
-            <input type="checkbox" id="rememberCheckbox" checked> <label for="rememberCheckbox">تذكرني</label>
+<div id="authContainer" style="min-height:100vh; display:flex; align-items:center; justify-content:center;">
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-icon"><i class="fas fa-chalkboard-user"></i></div>
+            <h2>مرحباً بعودتك</h2>
+            <div class="input-group"><input type="text" id="loginName" placeholder="اسم المستخدم"></div>
+            <div class="input-group"><input type="password" id="loginPass" placeholder="كلمة المرور"></div>
+            <div class="checkbox-group"><input type="checkbox" id="rememberAuth"> <label>تذكرني</label></div>
+            <div id="authFeedback" class="error-msg"></div>
+            <div class="auth-buttons">
+                <button id="doLogin" class="btn-primary">دخول</button>
+                <button id="doSignup" class="btn-secondary">إنشاء حساب جديد</button>
+            </div>
         </div>
-        <div id="authError" class="error-msg"></div>
-        <button id="loginBtn" class="btn-primary">تسجيل الدخول</button>
-        <button id="signupBtn" class="btn-secondary">إنشاء حساب جديد</button>
     </div>
 </div>
 
-<!-- التطبيق الرئيسي -->
-<div id="appContainer" style="display: none;">
-    <div class="app-wrapper">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-chart-simple"></i> الإحصائيات</h3>
-            </div>
-            <div class="stats-panel">
-                <h4><i class="fas fa-chart-pie"></i> الإنجاز الكلي</h4>
-                <canvas id="totalChart" width="200" height="200"></canvas>
-            </div>
-            <div class="stats-panel">
-                <h4><i class="fas fa-chart-bar"></i> توزيع المهام</h4>
-                <canvas id="categoryChart" width="200" height="200"></canvas>
-            </div>
-            <div class="sidebar-buttons">
-                <button id="shareTableBtn" class="btn"><i class="fas fa-share-alt"></i> مشاركة الجدول</button>
-                <button id="importFromLinkBtn" class="btn btn-outline"><i class="fas fa-link"></i> استيراد من رابط</button>
+<!-- واجهة التطبيق الرئيسية -->
+<div id="appMain" style="display: none;">
+    <div class="app-layout">
+        <div class="app-header">
+            <div class="logo-area"><h1><i class="fas fa-calendar-week"></i> جدول العطلة</h1></div>
+            <div class="user-controls">
+                <span id="greetingUser" style="font-weight:500;"></span>
+                <button id="darkModeBtn" class="btn-soft"><i class="fas fa-moon"></i> داكن</button>
+                <button id="logoutBtnMain" class="btn-soft"><i class="fas fa-arrow-right-from-bracket"></i> خروج</button>
             </div>
         </div>
-        <div class="main-content">
-            <div class="top-bar">
-                <div class="user-greeting"><i class="fas fa-user-circle"></i> مرحباً، <span id="currentUserSpan"></span></div>
-                <div class="user-actions">
-                    <button id="darkModeToggle" class="btn-icon"><i class="fas fa-moon"></i> الوضع</button>
-                    <button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        <div class="dashboard-grid">
+            <aside class="sidebar-stats" id="statsPanel">
+                <div class="stat-card"><h3><i class="fas fa-chart-pie"></i> الإنجاز</h3><canvas id="totalChart" width="200" height="200"></canvas></div>
+                <div class="stat-card"><h3><i class="fas fa-chart-simple"></i> التوزيع</h3><canvas id="categoryChart" width="200" height="200"></canvas></div>
+                <div class="share-buttons">
+                    <button id="shareLinkBtn"><i class="fas fa-share-nodes"></i> مشاركة الرابط</button>
+                    <button id="importLinkBtn"><i class="fas fa-link"></i> استيراد من رابط</button>
                 </div>
-            </div>
-            <div class="categories-grid" id="categoriesContainer"></div>
-            <div class="add-panel" id="addPanel">
-                <h4><i class="fas fa-plus-circle"></i> إضافة نشاط جديد</h4>
-                <div class="form-row">
-                    <div class="field"><input type="text" id="newItemName" placeholder="الاسم"></div>
-                    <div class="field"><select id="newItemType"><option value="Game">لعبة</option><option value="Movie">فيلم</option><option value="Series">مسلسل</option></select></div>
-                    <div class="field"><input type="text" id="newItemSpec" placeholder="مواصفات"></div>
-                    <button id="addItemBtn" class="btn">أضف</button>
-                </div>
+            </aside>
+            <div class="content-area" id="categoriesArea"></div>
+        </div>
+        <div class="add-task-panel" id="addTaskPanel">
+            <h4 style="margin-bottom: 0.7rem;"><i class="fas fa-plus-circle"></i> أضف نشاطاً</h4>
+            <div class="flex-form">
+                <input type="text" id="newName" placeholder="الاسم (مثال: Spider-Verse)">
+                <select id="newType"><option value="Game">لعبة</option><option value="Movie">فيلم</option><option value="Series">مسلسل</option></select>
+                <input type="text" id="newSpec" placeholder="مواصفات / ملاحظة">
+                <button id="addTaskBtn" class="btn-add"><i class="fas fa-save"></i> حفظ</button>
             </div>
         </div>
-        <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
     </div>
+    <div class="floating-mobile-btn" id="mobileStatsBtn"><i class="fas fa-chart-line"></i> إحصائيات</div>
 </div>
 
 <script>
-    // ------------------- نظام حسابات بدون أدوار (جميع المستخدمين متساوون) -------------------
+    // ---------- قاعدة البيانات المحلية (بدون أدوار) ----------
     let currentUser = null;
     let items = [];
 
-    function hashPassword(pw) { let h=0; for(let i=0;i<pw.length;i++) h=((h<<5)-h)+pw.charCodeAt(i); return h.toString(); }
-    function loadUsersDB() { const db=localStorage.getItem("app_users_db_final"); try { return db?JSON.parse(db):{}; } catch(e){return {};} }
-    function saveUsersDB(users){ localStorage.setItem("app_users_db_final",JSON.stringify(users)); }
-
-    function getDefaultItems(){
+    function hashPW(pw){ let h=0; for(let i=0;i<pw.length;i++) h=((h<<5)-h)+pw.charCodeAt(i); return h.toString(); }
+    function loadUsersDB(){ const raw=localStorage.getItem("v2_users_app"); try{ return raw?JSON.parse(raw):{}; }catch(e){return{};} }
+    function saveUsersDB(db){ localStorage.setItem("v2_users_app",JSON.stringify(db)); }
+    function getDefaultTemplate(){
         return [
-            {id:"g1",name:"Valorant",type:"Game",spec:"i3/4GB",checked:false},
-            {id:"g2",name:"Genshin Impact",type:"Game",spec:"GT 1030",checked:false},
-            {id:"g3",name:"Stardew Valley",type:"Game",spec:"خفيف",checked:false},
+            {id:"g1",name:"Valorant",type:"Game",spec:"i3 / 4GB ram",checked:false},
+            {id:"g2",name:"Genshin Impact",type:"Game",spec:"متوسط الإعدادات",checked:false},
+            {id:"g3",name:"Stardew Valley",type:"Game",spec:"أي جهاز",checked:false},
             {id:"g4",name:"Terraria",type:"Game",spec:"2D",checked:false},
-            {id:"g5",name:"Rocket League",type:"Game",spec:"GTX 750",checked:false},
-            {id:"m1",name:"Inception",type:"Movie",spec:"2010",checked:false},
-            {id:"m2",name:"The Dark Knight",type:"Movie",spec:"2008",checked:false},
-            {id:"m3",name:"Interstellar",type:"Movie",spec:"2014",checked:false},
-            {id:"m4",name:"Parasite",type:"Movie",spec:"2019",checked:false},
-            {id:"m5",name:"The Social Network",type:"Movie",spec:"2010",checked:false},
+            {id:"g5",name:"Rocket League",type:"Game",spec:"GTX 750 Ti",checked:false},
+            {id:"m1",name:"Inception",type:"Movie",spec:"خيال علمي",checked:false},
+            {id:"m2",name:"The Dark Knight",type:"Movie",spec:"جريمة/حركة",checked:false},
+            {id:"m3",name:"Interstellar",type:"Movie",spec:"فضاء",checked:false},
+            {id:"m4",name:"Parasite",type:"Movie",spec:"دراما",checked:false},
+            {id:"m5",name:"The Social Network",type:"Movie",spec:"سيرة ذاتية",checked:false},
             {id:"s1",name:"Breaking Bad",type:"Series",spec:"5 مواسم",checked:false},
-            {id:"s2",name:"Stranger Things",type:"Series",spec:"خيال علمي",checked:false},
+            {id:"s2",name:"Stranger Things",type:"Series",spec:"خيال",checked:false},
             {id:"s3",name:"The Witcher",type:"Series",spec:"فانتازيا",checked:false},
-            {id:"s4",name:"Money Heist",type:"Series",spec:"La Casa",checked:false},
-            {id:"s5",name:"Black Mirror",type:"Series",spec:"Anthology",checked:false}
+            {id:"s4",name:"Money Heist",type:"Series",spec:"تشويق",checked:false},
+            {id:"s5",name:"Black Mirror",type:"Series",spec:"أنثولوجيا",checked:false}
         ];
     }
-
-    function signup(username,password){
-        if(!username.trim()||!password.trim()) return false;
-        const users=loadUsersDB();
-        if(users[username]) return false;
-        users[username]={ password:hashPassword(password), data: null };
-        saveUsersDB(users);
-        // تعيين البيانات الافتراضية للمستخدم الجديد
-        const newData = getDefaultItems();
-        users[username].data = newData;
-        saveUsersDB(users);
+    function signup(uname,pwd){
+        if(!uname.trim()||!pwd.trim()) return false;
+        let db=loadUsersDB();
+        if(db[uname]) return false;
+        db[uname]={ password:hashPW(pwd), data: getDefaultTemplate() };
+        saveUsersDB(db);
         return true;
     }
-
-    function login(username,password){
-        const users=loadUsersDB();
-        const hashed=hashPassword(password);
-        if(users[username] && users[username].password===hashed){
-            currentUser=username;
-            loadUserData();
+    function login(uname,pwd){
+        let db=loadUsersDB();
+        if(db[uname] && db[uname].password===hashPW(pwd)){
+            currentUser=uname;
+            items=JSON.parse(JSON.stringify(db[uname].data));
             return true;
         }
         return false;
     }
-
-    function loadUserData(){
-        const users=loadUsersDB();
-        const data=users[currentUser]?.data;
-        if(data && Array.isArray(data)) items=JSON.parse(JSON.stringify(data));
-        else items=getDefaultItems();
+    function saveCurrentUserData(){
+        if(!currentUser) return;
+        let db=loadUsersDB();
+        if(db[currentUser]){ db[currentUser].data=JSON.parse(JSON.stringify(items)); saveUsersDB(db); }
     }
-
-    function saveUserDataToDB(){
-        const users=loadUsersDB();
-        if(users[currentUser]){ users[currentUser].data=JSON.parse(JSON.stringify(items)); saveUsersDB(users);}
+    function saveSession(uname,rem){
+        if(rem) localStorage.setItem("active_session_v2",uname);
+        else sessionStorage.setItem("active_session_v2",uname);
     }
-
-    function saveLoginSession(username,remember){
-        if(remember) localStorage.setItem("loggedInUserFinal",username);
-        else sessionStorage.setItem("loggedInUserFinal",username);
-    }
-    function clearLoginSession(){ localStorage.removeItem("loggedInUserFinal"); sessionStorage.removeItem("loggedInUserFinal");}
-    function getStoredUser(){ return localStorage.getItem("loggedInUserFinal") || sessionStorage.getItem("loggedInUserFinal");}
+    function clearSession(){ localStorage.removeItem("active_session_v2"); sessionStorage.removeItem("active_session_v2");}
+    function getStoredSession(){ return localStorage.getItem("active_session_v2") || sessionStorage.getItem("active_session_v2");}
     function tryAutoLogin(){
-        const stored=getStoredUser();
-        if(stored && loadUsersDB()[stored]){ 
-            currentUser=stored; loadUserData(); return true;
-        }
+        let stored=getStoredSession();
+        if(stored && loadUsersDB()[stored]){ currentUser=stored; items=JSON.parse(JSON.stringify(loadUsersDB()[stored].data)); return true;}
         return false;
     }
-
-    // ---------- الرسوم البيانية والوظائف ----------
-    let totalChart, categoryChart;
-    let sortableInstances = [];
-
-    function escapeHtml(str){ if(!str) return ''; return str.replace(/[&<>]/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m]));}
-
-    function updateCharts(){
-        const total=items.length, completed=items.filter(i=>i.checked).length;
+    // الرسوم البيانية والسحب
+    let totalChart,catChart,sortableGames,sortableMovies,sortableSeries;
+    function renderCharts(){
+        let total=items.length,completed=items.filter(i=>i.checked).length;
         if(totalChart) totalChart.destroy();
-        const ctxTotal=document.getElementById('totalChart').getContext('2d');
-        totalChart=new Chart(ctxTotal,{ type:'doughnut', data:{ labels:['منجز','متبقي'], datasets:[{ data:[completed,total-completed], backgroundColor:['#f4a261','#2c5f8a'] }] } });
-        const catCount={Game:0,Movie:0,Series:0};
-        items.forEach(i=>{ if(i.type==='Game') catCount.Game++; else if(i.type==='Movie') catCount.Movie++; else if(i.type==='Series') catCount.Series++; });
-        if(categoryChart) categoryChart.destroy();
-        const ctxCat=document.getElementById('categoryChart').getContext('2d');
-        categoryChart=new Chart(ctxCat,{ type:'bar', data:{ labels:['ألعاب','أفلام','مسلسلات'], datasets:[{ data:[catCount.Game,catCount.Movie,catCount.Series], backgroundColor:'#3b82f6' }] } });
+        let ctx=document.getElementById('totalChart').getContext('2d');
+        totalChart=new Chart(ctx,{type:'doughnut',data:{labels:['منجز','متبقي'],datasets:[{data:[completed,total-completed],backgroundColor:['#f4a261','#2c5f8a']}]}});
+        let cats={Game:0,Movie:0,Series:0};
+        items.forEach(i=>{if(i.type==='Game') cats.Game++; else if(i.type==='Movie') cats.Movie++; else cats.Series++;});
+        if(catChart) catChart.destroy();
+        let ctx2=document.getElementById('categoryChart').getContext('2d');
+        catChart=new Chart(ctx2,{type:'bar',data:{labels:['ألعاب','أفلام','مسلسلات'],datasets:[{data:[cats.Game,cats.Movie,cats.Series],backgroundColor:'#3b82f6'}]}});
     }
-
     function renderCategories(){
-        const groups={Game:[],Movie:[],Series:[]};
+        let groups={Game:[],Movie:[],Series:[]};
         items.forEach(i=>groups[i.type]?.push(i));
-        const container=document.getElementById('categoriesContainer');
-        if(!container) return;
+        const container=document.getElementById('categoriesArea');
         container.innerHTML='';
-        const cats=[
-            {key:'Game',label:'ألعاب للأجهزة المتوسطة',icon:'fa-gamepad'},
-            {key:'Movie',label:'أفلام',icon:'fa-film'},
-            {key:'Series',label:'مسلسلات',icon:'fa-tv'}
+        const catsMeta=[
+            {key:'Game',label:'🎮 ألعاب متوسطة',icon:'fa-gamepad',color:'games'},
+            {key:'Movie',label:'🎬 أفلام',icon:'fa-film',color:'movies'},
+            {key:'Series',label:'📺 مسلسلات',icon:'fa-tv',color:'series'}
         ];
-        cats.forEach(cat=>{
-            const catDiv=document.createElement('div'); catDiv.className='category-card';
-            catDiv.innerHTML=`
-                <div class="category-header"><h3><i class="fas ${cat.icon}"></i> ${cat.label}</h3><span class="cat-count" id="count-${cat.key}">0/0</span></div>
-                <div class="item-list" data-category="${cat.key}" id="list-${cat.key}"></div>
+        catsMeta.forEach(meta=>{
+            let card=document.createElement('div'); card.className='category-block';
+            let catItems=groups[meta.key];
+            let compCount=catItems.filter(i=>i.checked).length;
+            card.innerHTML=`
+                <div class="category-head ${meta.color}"><div class="cat-title"><i class="fas ${meta.icon}"></i> ${meta.label}</div><span class="cat-counter">✔️ ${compCount}/${catItems.length}</span></div>
+                <div class="item-list" data-cat="${meta.key}" id="list-${meta.key}"></div>
             `;
-            container.appendChild(catDiv);
-            const listDiv=catDiv.querySelector('.item-list');
-            const catItems=groups[cat.key];
+            container.appendChild(card);
+            let listDiv=card.querySelector('.item-list');
             catItems.forEach(item=>{
-                const itemDiv=document.createElement('div'); itemDiv.className='check-item'; itemDiv.setAttribute('data-id',item.id);
-                itemDiv.innerHTML=`
-                    <input type="checkbox" class="item-checkbox" data-id="${item.id}" ${item.checked?'checked':''}>
-                    <div class="item-info"><span class="item-name">${escapeHtml(item.name)}</span>${item.spec?`<span class="spec-badge"><i class="fas fa-microchip"></i> ${escapeHtml(item.spec)}</span>`:''}</div>
-                    <button class="delete-item" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                let row=document.createElement('div'); row.className='task-item'; row.setAttribute('data-id',item.id);
+                row.innerHTML=`
+                    <input type="checkbox" class="task-check" data-id="${item.id}" ${item.checked?'checked':''}>
+                    <div class="task-info"><span class="task-name">${escapeHtml(item.name)}</span>${item.spec?`<span class="task-spec"><i class="fas fa-microchip"></i> ${escapeHtml(item.spec)}</span>`:''}</div>
+                    <button class="delete-task" data-id="${item.id}"><i class="fas fa-trash-can"></i></button>
                 `;
-                listDiv.appendChild(itemDiv);
+                listDiv.appendChild(row);
             });
-            const completed=catItems.filter(i=>i.checked).length;
-            const countSpan=catDiv.querySelector('.cat-count');
-            countSpan.innerText=`✔️ ${completed}/${catItems.length}`;
         });
-        attachCheckboxEvents();
+        attachEventsToCheckboxes();
         attachDeleteEvents();
         initSortable();
-        updateCharts();
+        renderCharts();
     }
-
-    function attachCheckboxEvents(){
-        document.querySelectorAll('.item-checkbox').forEach(cb=>{
-            const newCb=cb.cloneNode(true);
+    function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
+    function attachEventsToCheckboxes(){
+        document.querySelectorAll('.task-check').forEach(cb=>{
+            let newCb=cb.cloneNode(true);
             cb.parentNode.replaceChild(newCb,cb);
             newCb.addEventListener('change',(e)=>{
-                const id=newCb.getAttribute('data-id');
-                const item=items.find(i=>i.id===id);
-                if(item){ item.checked=newCb.checked; saveUserDataToDB(); renderCategories(); }
+                let id=newCb.getAttribute('data-id');
+                let item=items.find(i=>i.id===id);
+                if(item){ item.checked=newCb.checked; saveCurrentUserData(); renderCategories(); }
             });
         });
     }
     function attachDeleteEvents(){
-        document.querySelectorAll('.delete-item').forEach(btn=>{
-            const newBtn=btn.cloneNode(true);
+        document.querySelectorAll('.delete-task').forEach(btn=>{
+            let newBtn=btn.cloneNode(true);
             btn.parentNode.replaceChild(newBtn,btn);
             newBtn.addEventListener('click',()=>{
-                const id=newBtn.getAttribute('data-id');
-                if(confirm('حذف العنصر؟')){ items=items.filter(i=>i.id!==id); saveUserDataToDB(); renderCategories(); }
+                let id=newBtn.getAttribute('data-id');
+                if(confirm('احذف هذا العنصر؟')){ items=items.filter(i=>i.id!==id); saveCurrentUserData(); renderCategories(); }
             });
         });
     }
     function initSortable(){
-        if(sortableInstances.length) sortableInstances.forEach(s=>s.destroy());
-        sortableInstances=[];
-        ['Game','Movie','Series'].forEach(cat=>{
-            const el=document.getElementById(`list-${cat}`);
-            if(el){
-                const sort=new Sortable(el,{ animation:150, onEnd:()=>{
-                    const newOrder=[];
-                    el.querySelectorAll('.check-item').forEach(div=>{ const id=div.getAttribute('data-id'); const found=items.find(i=>i.id===id); if(found) newOrder.push(found); });
-                    items=newOrder;
-                    saveUserDataToDB();
-                }});
-                sortableInstances.push(sort);
-            }
-        });
+        if(sortableGames) sortableGames.destroy();
+        if(sortableMovies) sortableMovies.destroy();
+        if(sortableSeries) sortableSeries.destroy();
+        let gameList=document.getElementById('list-Game');
+        let movieList=document.getElementById('list-Movie');
+        let seriesList=document.getElementById('list-Series');
+        if(gameList) sortableGames=new Sortable(gameList,{animation:150,onEnd:()=>{ reorderFromDOM('Game'); }});
+        if(movieList) sortableMovies=new Sortable(movieList,{animation:150,onEnd:()=>{ reorderFromDOM('Movie'); }});
+        if(seriesList) sortableSeries=new Sortable(seriesList,{animation:150,onEnd:()=>{ reorderFromDOM('Series'); }});
     }
-
-    function addCustomItem(){
-        const name=document.getElementById('newItemName').value.trim();
-        if(!name){ alert('الرجاء إدخال الاسم'); return; }
-        const type=document.getElementById('newItemType').value;
-        const spec=document.getElementById('newItemSpec').value.trim()||'بدون تفاصيل';
-        const newId='item_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);
-        items.push({id:newId,name,type,spec,checked:false});
-        saveUserDataToDB();
+    function reorderFromDOM(cat){
+        let container=document.getElementById(`list-${cat}`);
+        if(!container) return;
+        let newOrder=[];
+        container.querySelectorAll('.task-item').forEach(div=>{ let id=div.getAttribute('data-id'); let found=items.find(i=>i.id===id); if(found) newOrder.push(found); });
+        let otherItems=items.filter(i=>i.type!==cat);
+        items=[...otherItems,...newOrder];
+        saveCurrentUserData();
         renderCategories();
-        document.getElementById('newItemName').value='';
-        document.getElementById('newItemSpec').value='';
     }
-
-    function exportTableToLink(){
-        const dataStr=JSON.stringify(items);
-        const encoded=btoa(encodeURIComponent(dataStr));
-        const url=`${window.location.origin}${window.location.pathname}?import=${encoded}`;
-        prompt('انسخ هذا الرابط لمشاركة الجدول:',url);
+    function addNewTask(){
+        let name=document.getElementById('newName').value.trim();
+        if(!name){ alert('يرجى إدخال اسم النشاط'); return; }
+        let type=document.getElementById('newType').value;
+        let spec=document.getElementById('newSpec').value.trim();
+        if(!spec) spec='—';
+        let newId='task_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+        items.push({id:newId,name,type,spec,checked:false});
+        saveCurrentUserData();
+        renderCategories();
+        document.getElementById('newName').value='';
+        document.getElementById('newSpec').value='';
+    }
+    function exportToLink(){
+        let encoded=btoa(encodeURIComponent(JSON.stringify(items)));
+        let url=`${window.location.origin}${window.location.pathname}?share=${encoded}`;
+        prompt('انسخ الرابط لمشاركة جدولك:',url);
     }
     function importFromLink(){
-        const urlParams=new URLSearchParams(window.location.search);
-        const importData=urlParams.get('import');
-        if(importData){
+        let params=new URLSearchParams(window.location.search);
+        let shared=params.get('share');
+        if(shared){
             try{
-                const decoded=decodeURIComponent(atob(importData));
-                const importedItems=JSON.parse(decoded);
-                if(Array.isArray(importedItems)){
-                    items=importedItems;
-                    saveUserDataToDB();
-                    renderCategories();
-                    alert('تم استيراد الجدول بنجاح!');
-                    window.history.replaceState({},document.title,window.location.pathname);
-                } else throw new Error();
-            } catch(e){ alert('رابط غير صالح'); }
-        } else alert('لا يوجد جدول مستورد في الرابط الحالي');
+                let decoded=decodeURIComponent(atob(shared));
+                let imported=JSON.parse(decoded);
+                if(Array.isArray(imported)){ items=imported; saveCurrentUserData(); renderCategories(); alert('تم استيراد الجدول!'); window.history.replaceState({},'',window.location.pathname);}
+                else throw new Error();
+            }catch(e){ alert('رابط غير صالح'); }
+        } else alert('لا يوجد جدول مشترك في الرابط');
     }
-
-    // واجهة المستخدم
-    function showApp(){
-        document.getElementById('authScreen').style.display='none';
-        document.getElementById('appContainer').style.display='block';
-        document.getElementById('currentUserSpan').innerText=currentUser;
+    function showAppUI(){
+        document.getElementById('authContainer').style.display='none';
+        document.getElementById('appMain').style.display='block';
+        document.getElementById('greetingUser').innerHTML=`<i class="fas fa-user-astronaut"></i> ${currentUser}`;
         renderCategories();
     }
-    function showAuth(){
-        document.getElementById('authScreen').style.display='flex';
-        document.getElementById('appContainer').style.display='none';
+    function showAuthUI(){
+        document.getElementById('authContainer').style.display='flex';
+        document.getElementById('appMain').style.display='none';
         currentUser=null;
     }
-    function logout(){ clearLoginSession(); showAuth(); }
-
+    document.getElementById('doLogin').onclick=()=>{
+        let u=document.getElementById('loginName').value.trim();
+        let p=document.getElementById('loginPass').value;
+        let rem=document.getElementById('rememberAuth').checked;
+        if(login(u,p)){ saveSession(u,rem); showAppUI(); }
+        else document.getElementById('authFeedback').innerText='بيانات غير صحيحة';
+    };
+    document.getElementById('doSignup').onclick=()=>{
+        let u=document.getElementById('loginName').value.trim();
+        let p=document.getElementById('loginPass').value;
+        let rem=document.getElementById('rememberAuth').checked;
+        if(!u||!p){ document.getElementById('authFeedback').innerText='املأ جميع الحقول'; return; }
+        if(signup(u,p)){ login(u,p); saveSession(u,rem); showAppUI(); }
+        else document.getElementById('authFeedback').innerText='اسم المستخدم موجود';
+    };
+    document.getElementById('logoutBtnMain').onclick=()=>{ clearSession(); showAuthUI(); };
+    document.getElementById('addTaskBtn').onclick=addNewTask;
+    document.getElementById('shareLinkBtn').onclick=exportToLink;
+    document.getElementById('importLinkBtn').onclick=importFromLink;
     // الوضع المظلم
-    function initDarkMode(){
-        const dark=localStorage.getItem('darkMode')==='true';
-        if(dark) document.body.classList.add('dark');
-        document.getElementById('darkModeToggle').onclick=()=>{
-            document.body.classList.toggle('dark');
-            localStorage.setItem('darkMode',document.body.classList.contains('dark'));
-        };
-    }
-
-    // ربط الأحداث
-    document.getElementById('loginBtn').onclick=()=>{
-        const user=document.getElementById('loginUsername').value.trim();
-        const pass=document.getElementById('loginPassword').value;
-        const remember=document.getElementById('rememberCheckbox').checked;
-        if(login(user,pass)){ saveLoginSession(user,remember); showApp(); }
-        else document.getElementById('authError').innerText='اسم المستخدم أو كلمة المرور غير صحيحة';
-    };
-    document.getElementById('signupBtn').onclick=()=>{
-        const user=document.getElementById('loginUsername').value.trim();
-        const pass=document.getElementById('loginPassword').value;
-        const remember=document.getElementById('rememberCheckbox').checked;
-        if(!user||!pass){ document.getElementById('authError').innerText='املأ جميع الحقول'; return; }
-        if(signup(user,pass)){ login(user,pass); saveLoginSession(user,remember); showApp(); }
-        else document.getElementById('authError').innerText='اسم المستخدم موجود مسبقاً';
-    };
-    document.getElementById('logoutBtn')?.addEventListener('click',logout);
-    document.getElementById('addItemBtn')?.addEventListener('click',addCustomItem);
-    document.getElementById('shareTableBtn')?.addEventListener('click',exportTableToLink);
-    document.getElementById('importFromLinkBtn')?.addEventListener('click',importFromLink);
-
-    // قائمة جانبية للجوال
-    const menuToggle=document.getElementById('menuToggle');
-    const sidebar=document.getElementById('sidebar');
-    if(menuToggle){
-        menuToggle.addEventListener('click',()=>{ sidebar.classList.toggle('open'); });
-    }
-
-    // بدء التشغيل
-    if(!tryAutoLogin()) showAuth();
-    else showApp();
-    initDarkMode();
+    let darkToggle=document.getElementById('darkModeBtn');
+    darkToggle.onclick=()=>{ document.body.classList.toggle('dark'); localStorage.setItem('dark_theme',document.body.classList.contains('dark')); };
+    if(localStorage.getItem('dark_theme')==='true') document.body.classList.add('dark');
+    // الجوال: اظهار الإحصائيات
+    let mobileBtn=document.getElementById('mobileStatsBtn');
+    let sidePanel=document.getElementById('statsPanel');
+    mobileBtn?.addEventListener('click',()=>{ sidePanel.classList.toggle('open-mobile'); setTimeout(()=>{ if(!sidePanel.classList.contains('open-mobile')) sidePanel.classList.remove('open-mobile'); },5000); });
+    if(tryAutoLogin()) showAppUI(); else showAuthUI();
 </script>
 </body>
 </html>
