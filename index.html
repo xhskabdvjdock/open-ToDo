@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جدول العطلة - تسجيل الدخول</title>
+    <title>جدول العطلة - تسجيل دخول دائم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,7 +15,6 @@
             justify-content: center;
             align-items: center;
         }
-        /* شاشة تسجيل الدخول */
         .auth-screen {
             background: white;
             border-radius: 2rem;
@@ -25,10 +24,7 @@
             box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
             text-align: center;
         }
-        .auth-screen h2 {
-            margin-bottom: 1.5rem;
-            color: #1e2f3f;
-        }
+        .auth-screen h2 { margin-bottom: 1.5rem; color: #1e2f3f; }
         .auth-screen input {
             width: 100%;
             padding: 12px 16px;
@@ -49,16 +45,18 @@
             font-weight: bold;
             cursor: pointer;
         }
-        .auth-screen button.secondary {
-            background: #f4a261;
-            margin-top: 8px;
-        }
-        .error-msg {
-            color: #dc2626;
+        .auth-screen button.secondary { background: #f4a261; margin-top: 8px; }
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
             font-size: 0.85rem;
-            margin: 8px 0;
+            color: #2c3e50;
+            justify-content: flex-start;
         }
-        /* التطبيق الرئيسي (يظهر بعد تسجيل الدخول) */
+        .remember-me input { width: auto; margin: 0; }
+        .error-msg { color: #dc2626; font-size: 0.85rem; margin: 8px 0; }
         .app-container {
             display: none;
             width: 100%;
@@ -93,14 +91,6 @@
             border-radius: 40px;
             cursor: pointer;
             font-weight: bold;
-        }
-        .btn-icon {
-            background: #f4a26120;
-            border: 1px solid #f4a261;
-            padding: 6px 12px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.8rem;
         }
         .stats-group { background: #2c4b63; padding: 0.5rem 1.2rem; border-radius: 60px; }
         .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
@@ -141,19 +131,22 @@
 </head>
 <body>
 
-<!-- شاشة تسجيل الدخول وإنشاء الحساب -->
+<!-- شاشة تسجيل الدخول -->
 <div id="authScreen" class="auth-screen">
     <i class="fas fa-calendar-alt" style="font-size: 3rem; color: #2c5f8a; margin-bottom: 1rem;"></i>
     <h2>سجل الدخول أو أنشئ حساباً</h2>
     <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="off">
     <input type="password" id="loginPassword" placeholder="كلمة المرور">
+    <div class="remember-me">
+        <input type="checkbox" id="rememberCheckbox" checked> <label for="rememberCheckbox">تذكرني (ابق مسجلاً)</label>
+    </div>
     <div id="authError" class="error-msg"></div>
     <button id="loginBtn"><i class="fas fa-sign-in-alt"></i> تسجيل الدخول</button>
     <button id="signupBtn" class="secondary"><i class="fas fa-user-plus"></i> إنشاء حساب جديد</button>
-    <p style="margin-top: 1rem; font-size: 0.75rem; color: #6c757d;">📌 يتم حفظ بياناتك في هذا المتصفح فقط. يمكنك تصدير جدولك ومشاركته مع صديقك.</p>
+    <p style="margin-top: 1rem; font-size: 0.75rem; color: #6c757d;"> بياناتك محفوظة في هذا المتصفح. اختر "تذكرني" لتبقى مسجلاً حتى بعد إغلاق المتصفح.</p>
 </div>
 
-<!-- التطبيق الرئيسي (يظهر بعد الدخول) -->
+<!-- التطبيق الرئيسي -->
 <div id="appContainer" class="app-container">
     <div class="dashboard">
         <div class="hero">
@@ -182,17 +175,15 @@
                 <button class="btn-add" id="addItemBtn"><i class="fas fa-save"></i> أضف</button>
             </div>
         </div>
-        <footer><i class="fas fa-lock"></i> بياناتك محفوظة محلياً. يمكنك تصدير الجدول ومشاركته.</footer>
+        <footer><i class="fas fa-lock"></i> تبقى مسجلاً حتى تضغط "خروج". يمكنك تصدير ومشاركة جدولك.</footer>
     </div>
 </div>
 
 <script>
-    // --------------------- نظام الحسابات البسيط ---------------------
-    // المستخدمون: { "username": { passwordHash, data } }
+    // ------------- نظام الحسابات مع "تذكرني" -------------
     let currentUser = null;
-    let items = []; // قائمة الأنشطة للمستخدم الحالي
+    let items = [];
 
-    // دالة لتشفير بسيط (لن تكون آمنة جداً لكن للغرض)
     function hashPassword(pw) {
         let hash = 0;
         for (let i = 0; i < pw.length; i++) {
@@ -202,13 +193,10 @@
         return hash.toString();
     }
 
-    // تحميل قاعدة المستخدمين من localStorage (محاكاة "قاعدة بيانات" محلية)
     function loadUsersDB() {
         const db = localStorage.getItem("app_users_db");
         if (db) {
-            try {
-                return JSON.parse(db);
-            } catch(e) { return {}; }
+            try { return JSON.parse(db); } catch(e) { return {}; }
         }
         return {};
     }
@@ -217,13 +205,12 @@
         localStorage.setItem("app_users_db", JSON.stringify(users));
     }
 
-    // تسجيل الدخول
+    // تسجيل الدخول (التحقق من كلمة المرور)
     function login(username, password) {
         const users = loadUsersDB();
         const hashed = hashPassword(password);
         if (users[username] && users[username].password === hashed) {
             currentUser = username;
-            // تحميل بيانات هذا المستخدم (قائمة الأنشطة)
             loadUserData();
             return true;
         }
@@ -234,16 +221,14 @@
     function signup(username, password) {
         if (!username.trim() || !password.trim()) return false;
         const users = loadUsersDB();
-        if (users[username]) return false; // موجود
+        if (users[username]) return false;
         const hashed = hashPassword(password);
-        users[username] = { password: hashed, data: null }; // data ستُحدد لاحقاً
+        users[username] = { password: hashed, data: null };
         saveUsersDB(users);
-        // إنشاء بيانات افتراضية لهذا المستخدم
         setDefaultUserData(username);
         return true;
     }
 
-    // تعيين البيانات الافتراضية لمستخدم جديد
     function setDefaultUserData(username) {
         const defaultItems = [
             { id: "def_game1", name: "Valorant", type: "Game", spec: "i3-4150 / 4GB RAM / Intel HD 4400", checked: false },
@@ -269,7 +254,6 @@
         }
     }
 
-    // تحميل بيانات المستخدم الحالي إلى مصفوفة items
     function loadUserData() {
         if (!currentUser) return;
         const users = loadUsersDB();
@@ -277,15 +261,13 @@
         if (userRecord && userRecord.data) {
             items = JSON.parse(JSON.stringify(userRecord.data));
         } else {
-            // لو لم توجد بيانات، ننشئ افتراضية
             setDefaultUserData(currentUser);
             const updated = loadUsersDB();
             items = JSON.parse(JSON.stringify(updated[currentUser].data));
         }
-        saveUserDataToDB(); // تأكد من الحفظ
+        saveUserDataToDB();
     }
 
-    // حفظ مصفوفة items الحالية في حساب المستخدم
     function saveUserDataToDB() {
         if (!currentUser) return;
         const users = loadUsersDB();
@@ -295,14 +277,61 @@
         }
     }
 
-    // ---- دوال التطبيق الأساسية (نفس السابق) ----
-    function generateId() { return 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2,6); }
+    // دالة لتخزين حالة تسجيل الدخول (session)
+    function saveLoginSession(username, remember) {
+        if (remember) {
+            localStorage.setItem("loggedInUser", username);
+        } else {
+            sessionStorage.setItem("loggedInUser", username);
+        }
+    }
 
+    function clearLoginSession() {
+        localStorage.removeItem("loggedInUser");
+        sessionStorage.removeItem("loggedInUser");
+    }
+
+    function getStoredUser() {
+        // نتحقق أولاً من localStorage (تذكرني دائم)
+        let user = localStorage.getItem("loggedInUser");
+        if (user) return user;
+        // ثم من sessionStorage (للمتصفح الحالي فقط)
+        user = sessionStorage.getItem("loggedInUser");
+        return user;
+    }
+
+    // تسجيل الخروج
+    function logout() {
+        currentUser = null;
+        clearLoginSession();
+        showAuth();
+    }
+
+    // محاولة استعادة جلسة سابقة عند تحميل الصفحة
+    function tryAutoLogin() {
+        const storedUser = getStoredUser();
+        if (storedUser) {
+            // نحتاج للتحقق من أن هذا المستخدم موجود في قاعدة البيانات
+            const users = loadUsersDB();
+            if (users[storedUser]) {
+                currentUser = storedUser;
+                loadUserData();
+                showApp();
+                return true;
+            } else {
+                // المستخدم المحفوظ غير موجود في قاعدة البيانات (تم حذفه يدوياً؟)
+                clearLoginSession();
+            }
+        }
+        return false;
+    }
+
+    // ---- دوال التطبيق الأساسية (نفس السابق مع تعديلات بسيطة) ----
+    function generateId() { return 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2,6); }
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
     function renderApp() {
         if (!currentUser) return;
-        // تحديث اسم المستخدم في الواجهة
         document.getElementById("currentUserDisplay").innerHTML = `( ${escapeHtml(currentUser)} )`;
         renderGrouped();
         updateTotalProgress();
@@ -336,7 +365,12 @@
         const container = document.getElementById("categoriesContainer");
         if(!container) return;
         const groups = { Game: [], Movie: [], Series: [] };
-        items.forEach(item => groups[item.type]?.push(item) || groups.Game.push(item));
+        items.forEach(item => {
+            if(item.type === "Game") groups.Game.push(item);
+            else if(item.type === "Movie") groups.Movie.push(item);
+            else if(item.type === "Series") groups.Series.push(item);
+            else groups.Game.push(item);
+        });
         const cats = [
             { key: "Game", label: "ألعاب للأجهزة المتوسطة", icon: '<i class="fas fa-gamepad"></i>', color: "games" },
             { key: "Movie", label: "أفلام", icon: '<i class="fas fa-film"></i>', color: "movies" },
@@ -460,7 +494,7 @@
         reader.readAsText(file);
     }
 
-    // ---- دوال التحكم في الواجهة ----
+    // ---- دوال إظهار الشاشات ----
     function showApp() {
         document.getElementById("authScreen").style.display = "none";
         document.getElementById("appContainer").style.display = "block";
@@ -472,11 +506,13 @@
         currentUser = null;
     }
 
-    // أحداث شاشة الدخول
+    // ---- ربط الأحداث ----
     document.getElementById("loginBtn").onclick = () => {
         const user = document.getElementById("loginUsername").value.trim();
         const pass = document.getElementById("loginPassword").value;
+        const remember = document.getElementById("rememberCheckbox").checked;
         if(login(user, pass)) {
+            saveLoginSession(user, remember);
             showApp();
         } else {
             document.getElementById("authError").innerText = "اسم المستخدم أو كلمة المرور غير صحيحة";
@@ -485,15 +521,17 @@
     document.getElementById("signupBtn").onclick = () => {
         const user = document.getElementById("loginUsername").value.trim();
         const pass = document.getElementById("loginPassword").value;
+        const remember = document.getElementById("rememberCheckbox").checked;
         if(!user || !pass) { document.getElementById("authError").innerText = "املأ جميع الحقول"; return; }
         if(signup(user, pass)) {
             login(user, pass);
+            saveLoginSession(user, remember);
             showApp();
         } else {
             document.getElementById("authError").innerText = "اسم المستخدم موجود مسبقاً";
         }
     };
-    document.getElementById("logoutBtn").onclick = () => { showAuth(); };
+    document.getElementById("logoutBtn").onclick = () => { logout(); };
     document.getElementById("resetDefaultBtn").onclick = resetToDefault;
     document.getElementById("uncheckAllBtn").onclick = uncheckAll;
     document.getElementById("addItemBtn").onclick = addCustomItem;
@@ -502,8 +540,10 @@
     document.getElementById("importDataBtn").onclick = () => importFile.click();
     importFile.onchange = (e) => { if(e.target.files.length) importData(e.target.files[0]); importFile.value = ''; };
 
-    // بداية: إظهار شاشة الدخول
-    showAuth();
+    // بدء التطبيق: محاولة الدخول التلقائي، وإلا إظهار شاشة الدخول
+    if(!tryAutoLogin()) {
+        showAuth();
+    }
 </script>
 </body>
 </html>
