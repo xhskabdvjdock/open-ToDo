@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>جدول العطلة الذكي | أدوار + إحصائيات + مشاركة</title>
-    <!-- Font Awesome 6 (أيقونات حقيقية) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts (Cairo + Inter) -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Chart.js للرسوم البيانية -->
+    <!-- Google Fonts (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- SortableJS للسحب والترتيب -->
+    <!-- SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
         * {
@@ -20,13 +20,13 @@
         }
 
         body {
-            font-family: 'Cairo', 'Inter', sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: var(--bg-gradient);
             transition: all 0.3s ease;
             min-height: 100vh;
         }
 
-        /* متغيرات الألوان (وضع فاتح) */
+        /* متغيرات الألوان - الوضع الفاتح */
         :root {
             --bg-gradient: linear-gradient(135deg, #f0f4fa 0%, #d9e2ec 100%);
             --card-bg: rgba(255, 255, 255, 0.96);
@@ -39,7 +39,8 @@
             --danger: #e53e3e;
             --success: #2c7a4d;
             --sidebar-bg: #ffffffdd;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.1);
+            --input-bg: #ffffff;
         }
 
         /* الوضع المظلم */
@@ -53,10 +54,125 @@
             --accent-hover: #2563eb;
             --orange-accent: #f97316;
             --sidebar-bg: #1e293bdd;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            --shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.4);
+            --input-bg: #2d3e4e;
         }
 
-        /* تخطيط الصفحة */
+        /* شاشة تسجيل الدخول (محسنة) */
+        .auth-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .auth-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 2rem;
+            padding: 2rem 1.8rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 1px solid var(--border-light);
+        }
+
+        .auth-card .icon {
+            font-size: 3rem;
+            color: var(--orange-accent);
+            margin-bottom: 1rem;
+        }
+
+        .auth-card h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 12px 18px;
+            margin: 10px 0;
+            border: 1px solid var(--border-light);
+            border-radius: 60px;
+            background: var(--input-bg);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .auth-card input:focus {
+            border-color: var(--orange-accent);
+            box-shadow: 0 0 0 2px rgba(244, 162, 97, 0.2);
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 15px 0;
+            justify-content: flex-start;
+            color: var(--text-secondary);
+        }
+
+        .remember-me input {
+            width: 18px;
+            margin: 0;
+        }
+
+        .auth-card button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .info-note {
+            margin-top: 1.2rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,0.05);
+            padding: 8px;
+            border-radius: 60px;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin: 5px 0;
+        }
+
+        /* التطبيق الرئيسي */
         .app-wrapper {
             display: flex;
             min-height: 100vh;
@@ -71,16 +187,15 @@
             padding: 1.5rem 1rem;
             display: flex;
             flex-direction: column;
-            gap: 2rem;
-            transition: all 0.3s;
+            gap: 1.5rem;
             position: sticky;
             top: 0;
             height: 100vh;
             overflow-y: auto;
         }
 
-        .sidebar-header h2 {
-            font-size: 1.5rem;
+        .sidebar-header h3 {
+            font-size: 1.3rem;
             color: var(--text-primary);
             display: flex;
             align-items: center;
@@ -89,83 +204,84 @@
 
         .stats-panel {
             background: var(--card-bg);
-            border-radius: 1.5rem;
+            border-radius: 1.2rem;
             padding: 1rem;
-            box-shadow: var(--shadow);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
-        .stats-panel h3 {
-            font-size: 1rem;
-            margin-bottom: 1rem;
+        .stats-panel h4 {
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
             color: var(--text-secondary);
         }
 
-        .charts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
         canvas {
-            max-height: 150px;
+            max-height: 140px;
             width: 100%;
         }
 
         .role-badge {
             background: var(--accent);
-            padding: 0.3rem 1rem;
+            padding: 0.5rem;
             border-radius: 40px;
             color: white;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             text-align: center;
         }
 
+        .sidebar-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-buttons button {
+            width: 100%;
+        }
+
+        /* المحتوى الرئيسي */
         .main-content {
             flex: 1;
             padding: 1.5rem;
         }
 
-        /* الهيدر */
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 1rem;
-            margin-bottom: 2rem;
             background: var(--card-bg);
-            padding: 1rem 1.5rem;
+            padding: 0.8rem 1.5rem;
             border-radius: 1.5rem;
-            backdrop-filter: blur(4px);
+            margin-bottom: 1.8rem;
         }
 
-        .user-area {
+        .user-greeting {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .user-actions {
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            gap: 12px;
         }
 
         .btn-icon {
             background: transparent;
             border: 1px solid var(--border-light);
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 40px;
             cursor: pointer;
             color: var(--text-primary);
             transition: 0.1s;
         }
 
-        .btn-icon:hover {
-            background: var(--orange-accent);
-            color: white;
-            border-color: var(--orange-accent);
-        }
-
-        /* أقسام الفئات */
+        /* فئات المهام */
         .categories-grid {
             display: flex;
             flex-direction: column;
-            gap: 1.8rem;
+            gap: 1.5rem;
         }
 
         .category-card {
@@ -173,7 +289,6 @@
             border-radius: 1.5rem;
             overflow: hidden;
             backdrop-filter: blur(4px);
-            transition: transform 0.2s;
         }
 
         .category-header {
@@ -183,11 +298,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         .category-header h3 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -195,24 +309,21 @@
 
         .item-list {
             padding: 1rem;
-            min-height: 120px;
+            min-height: 100px;
         }
 
         .check-item {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(2px);
+            background: rgba(255,255,255,0.08);
             border-radius: 1rem;
             padding: 0.7rem 1rem;
             margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 12px;
-            cursor: grab;
-            transition: 0.1s;
             border: 1px solid var(--border-light);
+            cursor: grab;
         }
         .check-item:active { cursor: grabbing; }
-        .check-item.dragging { opacity: 0.4; }
 
         .item-checkbox {
             width: 20px;
@@ -244,9 +355,8 @@
             border: none;
             color: var(--danger);
             cursor: pointer;
-            opacity: 0.7;
+            font-size: 1rem;
         }
-        .delete-item:hover { opacity: 1; }
 
         .add-panel {
             margin-top: 2rem;
@@ -264,14 +374,14 @@
 
         .field {
             flex: 2;
-            min-width: 140px;
+            min-width: 130px;
         }
         .field input, .field select {
             width: 100%;
             padding: 8px 12px;
             border-radius: 60px;
             border: 1px solid var(--border-light);
-            background: var(--card-bg);
+            background: var(--input-bg);
             color: var(--text-primary);
         }
 
@@ -284,22 +394,13 @@
             cursor: pointer;
             font-weight: 600;
         }
-
         .btn-outline {
             background: transparent;
             border: 1px solid var(--accent);
             color: var(--accent);
         }
 
-        .auth-screen {
-            background: var(--card-bg);
-            border-radius: 2rem;
-            padding: 2rem;
-            max-width: 450px;
-            margin: 5vh auto;
-            text-align: center;
-        }
-
+        /* للجوال */
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -312,9 +413,8 @@
                 right: 0;
             }
             .app-wrapper { flex-direction: column; }
-            .main-content { margin-right: 0; }
             .menu-toggle {
-                display: block;
+                display: flex;
                 position: fixed;
                 bottom: 20px;
                 left: 20px;
@@ -323,57 +423,68 @@
                 border-radius: 50%;
                 width: 50px;
                 height: 50px;
-                display: flex;
                 align-items: center;
                 justify-content: center;
                 box-shadow: var(--shadow);
+                cursor: pointer;
             }
         }
         .menu-toggle { display: none; }
     </style>
 </head>
 <body>
-<div id="authScreen" class="auth-screen" style="display: flex;">
-    <i class="fas fa-crown" style="font-size: 3rem; color: var(--orange-accent);"></i>
-    <h2>مرحباً بك في جدول العطلة</h2>
-    <input type="text" id="loginUsername" placeholder="اسم المستخدم">
-    <input type="password" id="loginPassword" placeholder="كلمة المرور">
-    <div class="remember-me"><input type="checkbox" id="rememberCheckbox" checked> <label>تذكرني</label></div>
-    <div id="authError" class="error-msg"></div>
-    <button id="loginBtn" class="btn">تسجيل الدخول</button>
-    <button id="signupBtn" class="btn btn-outline" style="margin-top: 10px;">إنشاء حساب جديد</button>
-    <p style="margin-top: 1rem; font-size: 0.75rem;">أول مستخدم يصبح مديراً، الأعضاء فقط يمكنهم تحديث المنجز.</p>
+
+<!-- شاشة تسجيل الدخول -->
+<div id="authScreen" class="auth-screen">
+    <div class="auth-card">
+        <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+        <h2>مرحباً بك في جدول العطلة</h2>
+        <input type="text" id="loginUsername" placeholder="اسم المستخدم" autocomplete="off">
+        <input type="password" id="loginPassword" placeholder="كلمة المرور">
+        <div class="remember-me">
+            <input type="checkbox" id="rememberCheckbox" checked> <label for="rememberCheckbox">تذكرني</label>
+        </div>
+        <div id="authError" class="error-msg"></div>
+        <button id="loginBtn" class="btn-primary">تسجيل الدخول</button>
+        <button id="signupBtn" class="btn-secondary">إنشاء حساب جديد</button>
+        <div class="info-note">
+            <i class="fas fa-info-circle"></i> أول مستخدم يصبح مديراً، الأعضاء فقط يمكنهم تحديث المنجز.
+        </div>
+    </div>
 </div>
 
+<!-- التطبيق الرئيسي -->
 <div id="appContainer" style="display: none;">
     <div class="app-wrapper">
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-chart-line"></i> الإحصائيات</h2>
+                <h3><i class="fas fa-chart-simple"></i> الإحصائيات</h3>
             </div>
             <div class="stats-panel">
-                <h3><i class="fas fa-chart-pie"></i> الإنجاز الكلي</h3>
+                <h4><i class="fas fa-chart-pie"></i> الإنجاز الكلي</h4>
                 <canvas id="totalChart" width="200" height="200"></canvas>
             </div>
             <div class="stats-panel">
-                <h3><i class="fas fa-chart-bar"></i> توزيع المهام</h3>
+                <h4><i class="fas fa-chart-bar"></i> توزيع المهام</h4>
                 <canvas id="categoryChart" width="200" height="200"></canvas>
             </div>
             <div class="role-badge" id="roleBadge">الدور: --</div>
-            <button id="shareTableBtn" class="btn" style="margin-top: 1rem;"><i class="fas fa-share-alt"></i> مشاركة الجدول</button>
-            <button id="importFromLinkBtn" class="btn btn-outline"><i class="fas fa-link"></i> استيراد من رابط</button>
+            <div class="sidebar-buttons">
+                <button id="shareTableBtn" class="btn"><i class="fas fa-share-alt"></i> مشاركة الجدول</button>
+                <button id="importFromLinkBtn" class="btn btn-outline"><i class="fas fa-link"></i> استيراد من رابط</button>
+            </div>
         </div>
         <div class="main-content">
             <div class="top-bar">
-                <div><i class="fas fa-calendar-alt"></i> مرحباً <span id="currentUserSpan"></span></div>
-                <div class="user-area">
-                    <button id="darkModeToggle" class="btn-icon"><i class="fas fa-moon"></i></button>
+                <div class="user-greeting"><i class="fas fa-user-circle"></i> مرحباً، <span id="currentUserSpan"></span></div>
+                <div class="user-actions">
+                    <button id="darkModeToggle" class="btn-icon"><i class="fas fa-moon"></i> الوضع</button>
                     <button id="logoutBtn" class="btn-icon"><i class="fas fa-sign-out-alt"></i> خروج</button>
                 </div>
             </div>
             <div class="categories-grid" id="categoriesContainer"></div>
             <div class="add-panel" id="addPanel">
-                <h3><i class="fas fa-plus-circle"></i> إضافة نشاط جديد</h3>
+                <h4><i class="fas fa-plus-circle"></i> إضافة نشاط جديد</h4>
                 <div class="form-row">
                     <div class="field"><input type="text" id="newItemName" placeholder="الاسم"></div>
                     <div class="field"><select id="newItemType"><option value="Game">لعبة</option><option value="Movie">فيلم</option><option value="Series">مسلسل</option></select></div>
@@ -389,39 +500,14 @@
 <script>
     // ------------------- نظام الأدوار والحسابات المتطور -------------------
     let currentUser = null;
-    let currentRole = null; // 'admin' or 'user'
-    let items = []; // { id, name, type, spec, checked, order? سنعتمد على الترتيب في المصفوفة حسب السحب }
+    let currentRole = null;
+    let items = [];
 
-    // دوال التشفير وقاعدة البيانات
     function hashPassword(pw) { let h=0; for(let i=0;i<pw.length;i++) h=((h<<5)-h)+pw.charCodeAt(i); return h.toString(); }
-    function loadUsersDB() { const db=localStorage.getItem("app_users_db_v2"); try { return db?JSON.parse(db):{}; } catch(e){return {};} }
-    function saveUsersDB(users){ localStorage.setItem("app_users_db_v2",JSON.stringify(users)); }
-
-    // تحقق إذا كان أول مستخدم (مدير)
+    function loadUsersDB() { const db=localStorage.getItem("app_users_db_v3"); try { return db?JSON.parse(db):{}; } catch(e){return {};} }
+    function saveUsersDB(users){ localStorage.setItem("app_users_db_v3",JSON.stringify(users)); }
     function isFirstUser() { return Object.keys(loadUsersDB()).length === 0; }
 
-    function signup(username,password){
-        if(!username.trim()||!password.trim()) return false;
-        const users=loadUsersDB();
-        if(users[username]) return false;
-        const role = isFirstUser() ? 'admin' : 'user';
-        users[username]={ password:hashPassword(password), role, data: null };
-        saveUsersDB(users);
-        if(role==='admin') setDefaultAdminData(username);
-        else setDefaultUserData(username);
-        return true;
-    }
-    function login(username,password){
-        const users=loadUsersDB();
-        const hashed=hashPassword(password);
-        if(users[username] && users[username].password===hashed){
-            currentUser=username;
-            currentRole=users[username].role;
-            loadUserData();
-            return true;
-        }
-        return false;
-    }
     function setDefaultAdminData(username){
         const defaultItems=[
             {id:"g1",name:"Valorant",type:"Game",spec:"i3/4GB",checked:false},
@@ -447,6 +533,28 @@
         const users=loadUsersDB();
         if(users[username]){ users[username].data=[]; saveUsersDB(users);}
     }
+    function signup(username,password){
+        if(!username.trim()||!password.trim()) return false;
+        const users=loadUsersDB();
+        if(users[username]) return false;
+        const role = isFirstUser() ? 'admin' : 'user';
+        users[username]={ password:hashPassword(password), role, data: null };
+        saveUsersDB(users);
+        if(role==='admin') setDefaultAdminData(username);
+        else setDefaultUserData(username);
+        return true;
+    }
+    function login(username,password){
+        const users=loadUsersDB();
+        const hashed=hashPassword(password);
+        if(users[username] && users[username].password===hashed){
+            currentUser=username;
+            currentRole=users[username].role;
+            loadUserData();
+            return true;
+        }
+        return false;
+    }
     function loadUserData(){
         const users=loadUsersDB();
         const data=users[currentUser]?.data;
@@ -457,13 +565,12 @@
         const users=loadUsersDB();
         if(users[currentUser]){ users[currentUser].data=JSON.parse(JSON.stringify(items)); saveUsersDB(users);}
     }
-    // جلسة التذكر
     function saveLoginSession(username,remember){
-        if(remember) localStorage.setItem("loggedInUserV2",username);
-        else sessionStorage.setItem("loggedInUserV2",username);
+        if(remember) localStorage.setItem("loggedInUserV3",username);
+        else sessionStorage.setItem("loggedInUserV3",username);
     }
-    function clearLoginSession(){ localStorage.removeItem("loggedInUserV2"); sessionStorage.removeItem("loggedInUserV2");}
-    function getStoredUser(){ return localStorage.getItem("loggedInUserV2") || sessionStorage.getItem("loggedInUserV2");}
+    function clearLoginSession(){ localStorage.removeItem("loggedInUserV3"); sessionStorage.removeItem("loggedInUserV3");}
+    function getStoredUser(){ return localStorage.getItem("loggedInUserV3") || sessionStorage.getItem("loggedInUserV3");}
     function tryAutoLogin(){
         const stored=getStoredUser();
         if(stored && loadUsersDB()[stored]){ 
@@ -472,7 +579,7 @@
         return false;
     }
 
-    // ---------- دوال التطبيق الرئيسية ----------
+    // ---------- الرسوم البيانية والوظائف ----------
     let totalChart, categoryChart;
     let sortableInstances = [];
 
@@ -519,7 +626,6 @@
                 `;
                 listDiv.appendChild(itemDiv);
             });
-            // تحديث العداد
             const completed=catItems.filter(i=>i.checked).length;
             const countSpan=catDiv.querySelector('.cat-count');
             countSpan.innerText=`✔️ ${completed}/${catItems.length}`;
@@ -607,14 +713,14 @@
         } else alert('لا يوجد جدول مستورد في الرابط الحالي');
     }
 
-    // واجهة وإظهار/إخفاء
+    // واجهة المستخدم
     function showApp(){
         document.getElementById('authScreen').style.display='none';
         document.getElementById('appContainer').style.display='block';
         document.getElementById('currentUserSpan').innerText=currentUser;
         document.getElementById('roleBadge').innerHTML=`<i class="fas fa-${currentRole==='admin'?'crown':'user'}"></i> الدور: ${currentRole==='admin'?'مدير':'عضو'}`;
-        if(currentRole!=='admin') document.getElementById('addPanel').style.display='none';
-        else document.getElementById('addPanel').style.display='block';
+        const addPanel=document.getElementById('addPanel');
+        if(addPanel) addPanel.style.display=currentRole==='admin'?'block':'none';
         renderCategories();
     }
     function showAuth(){
@@ -624,7 +730,7 @@
     }
     function logout(){ clearLoginSession(); showAuth(); }
 
-    // التحكم بالوضع المظلم
+    // الوضع المظلم
     function initDarkMode(){
         const dark=localStorage.getItem('darkMode')==='true';
         if(dark) document.body.classList.add('dark');
@@ -640,20 +746,21 @@
         const pass=document.getElementById('loginPassword').value;
         const remember=document.getElementById('rememberCheckbox').checked;
         if(login(user,pass)){ saveLoginSession(user,remember); showApp(); }
-        else document.getElementById('authError').innerText='بيانات غير صحيحة';
+        else document.getElementById('authError').innerText='اسم المستخدم أو كلمة المرور غير صحيحة';
     };
     document.getElementById('signupBtn').onclick=()=>{
         const user=document.getElementById('loginUsername').value.trim();
         const pass=document.getElementById('loginPassword').value;
         const remember=document.getElementById('rememberCheckbox').checked;
-        if(!user||!pass){ document.getElementById('authError').innerText='املأ الحقول'; return; }
+        if(!user||!pass){ document.getElementById('authError').innerText='املأ جميع الحقول'; return; }
         if(signup(user,pass)){ login(user,pass); saveLoginSession(user,remember); showApp(); }
-        else document.getElementById('authError').innerText='اسم المستخدم موجود';
+        else document.getElementById('authError').innerText='اسم المستخدم موجود مسبقاً';
     };
     document.getElementById('logoutBtn')?.addEventListener('click',logout);
     document.getElementById('addItemBtn')?.addEventListener('click',addCustomItem);
     document.getElementById('shareTableBtn')?.addEventListener('click',exportTableToLink);
     document.getElementById('importFromLinkBtn')?.addEventListener('click',importFromLink);
+
     // قائمة جانبية للجوال
     const menuToggle=document.getElementById('menuToggle');
     const sidebar=document.getElementById('sidebar');
