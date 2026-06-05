@@ -3,671 +3,512 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>دليل العطلة | نشاطات وأفلام وألعاب</title>
-    <!-- Font Awesome 6 (أيقونات حديثة) -->
+    <title>جدول العطلة - نسخة متطورة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts: Cairo + Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Chart.js -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <!-- SortableJS -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Cairo', 'Inter', sans-serif;
-            background-color: #f5f7fb;
-            transition: background-color 0.25s ease, color 0.2s ease;
+            font-family: 'Cairo', sans-serif;
+            background: #f3f6fc;
+            transition: 0.2s;
             color: #1e293b;
         }
-
-        /* الوضع المظلم - تصميم عميق وأنيق */
         body.dark {
-            background-color: #0f1724;
+            background: #0f1724;
             color: #eef2ff;
         }
-
-        /* شاشة الدخول - كارت أنيق */
-        .auth-wrapper {
+        /* شاشة الدخول */
+        .auth-wrap {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
-            background: radial-gradient(circle at 10% 30%, rgba(44, 95, 138, 0.08), rgba(244, 162, 97, 0.05));
+            background: radial-gradient(circle at 20% 30%, #eef2ff, #d9e2ec);
         }
-
+        body.dark .auth-wrap {
+            background: radial-gradient(circle at 20% 30%, #1e2a3e, #0f1724);
+        }
         .auth-card {
-            background: rgba(255, 255, 255, 0.97);
-            backdrop-filter: blur(0px);
-            border-radius: 2.5rem;
-            padding: 2.5rem 2rem;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            transition: all 0.2s;
-            border: 1px solid #eef2ff;
+            background: rgba(255,255,255,0.96);
+            border-radius: 2rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 25px 40px -12px rgba(0,0,0,0.2);
         }
         body.dark .auth-card {
             background: #1e2a3e;
-            border-color: #2d3e56;
-            box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
         }
-
-        .auth-icon {
-            text-align: center;
-            font-size: 3rem;
-            color: #f4a261;
-            margin-bottom: 1rem;
-        }
-        .auth-card h2 {
-            font-size: 1.9rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.3px;
-        }
-        .input-group {
-            margin-bottom: 1rem;
-        }
-        .input-group input {
+        .auth-card h2 { text-align: center; margin-bottom: 1.5rem; }
+        .auth-card input {
             width: 100%;
-            padding: 1rem 1.2rem;
-            background: #ffffff;
-            border: 1.5px solid #e2e8f0;
+            padding: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid #cbd5e1;
             border-radius: 1.5rem;
-            font-size: 1rem;
-            font-family: inherit;
-            transition: 0.2s;
+            background: white;
         }
-        body.dark .input-group input {
+        body.dark .auth-card input {
             background: #0f1724;
             border-color: #2d3e56;
-            color: #f1f5f9;
-        }
-        .input-group input:focus {
-            outline: none;
-            border-color: #f4a261;
-            box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.2);
-        }
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 1rem 0;
-        }
-        .auth-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1.2rem;
-        }
-        .btn-primary {
-            background: #1e4668;
-            border: none;
-            padding: 0.9rem;
-            border-radius: 2rem;
-            font-weight: 700;
-            font-size: 1rem;
             color: white;
-            cursor: pointer;
-            transition: all 0.2s;
         }
-        .btn-primary:hover {
-            background: #0f2f4a;
-            transform: translateY(-2px);
+        .checkbox {
+            display: flex;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
         }
-        .btn-secondary {
-            background: transparent;
-            border: 1.5px solid #1e4668;
-            padding: 0.9rem;
+        .btn {
+            width: 100%;
+            padding: 0.8rem;
             border-radius: 2rem;
-            font-weight: 700;
-            color: #1e4668;
+            border: none;
+            font-weight: bold;
+            margin-top: 0.6rem;
             cursor: pointer;
         }
-        body.dark .btn-secondary {
-            border-color: #f4a261;
-            color: #f4a261;
-        }
-        .error-msg {
-            color: #e53e3e;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-
-        /* التطبيق الرئيسي - تصميم حديث */
-        .app-layout {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 1.5rem;
-        }
-        /* شريط علوي أنيق */
-        .app-header {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border-radius: 2rem;
-            padding: 0.8rem 2rem;
-            margin-bottom: 2rem;
+        .btn-primary { background: #1e4668; color: white; }
+        .btn-secondary { background: transparent; border: 1px solid #1e4668; color: #1e4668; }
+        body.dark .btn-secondary { border-color: #f4a261; color: #f4a261; }
+        /* واجهة التطبيق */
+        .app-container { max-width: 1400px; margin: 1rem auto; padding: 0 1rem; }
+        .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-        }
-        body.dark .app-header {
-            background: rgba(30, 42, 62, 0.8);
-            border-color: #2d3e56;
-        }
-        .logo-area h1 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1e4668, #f4a261);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        .user-controls {
-            display: flex;
-            gap: 0.8rem;
-            align-items: center;
-        }
-        .btn-soft {
-            background: rgba(0,0,0,0.05);
-            border: none;
-            padding: 0.5rem 1.2rem;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            padding: 0.8rem 1.5rem;
             border-radius: 2rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-        body.dark .btn-soft {
-            background: #2d3e56;
-            color: #eef2ff;
-        }
-
-        /* شبكة المحتوى + الشريط الجانبي */
-        .dashboard-grid {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-        .sidebar-stats {
-            flex: 1.2;
-            min-width: 260px;
-            background: rgba(255,255,255,0.5);
-            backdrop-filter: blur(8px);
-            border-radius: 2rem;
-            padding: 1.5rem;
-            height: fit-content;
-            position: sticky;
-            top: 1.5rem;
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-        body.dark .sidebar-stats {
-            background: rgba(30, 42, 62, 0.6);
-            border-color: #2d3e56;
-        }
-        .stat-card {
             margin-bottom: 2rem;
         }
-        .stat-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
+        body.dark .top-bar { background: #1e2a3ecc; }
+        .logo h1 { font-size: 1.5rem; background: linear-gradient(135deg, #1e4668, #f4a261); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .flex-row { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .sidebar-stats {
+            flex: 1.2;
+            min-width: 250px;
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            height: fit-content;
+            position: sticky;
+            top: 1rem;
         }
-        canvas {
-            max-height: 160px;
-            width: 100%;
-        }
-        .share-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-        }
-        .share-buttons button {
-            width: 100%;
-            padding: 0.7rem;
-            border-radius: 1.5rem;
-            background: rgba(0,0,0,0.05);
-            border: none;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .content-area {
+        body.dark .sidebar-stats { background: #1e2a3ecc; }
+        .content-main {
             flex: 3;
             min-width: 260px;
         }
-        /* فئات المهام */
-        .category-block {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(4px);
-            border-radius: 1.8rem;
-            margin-bottom: 1.8rem;
+        .category-card {
+            background: rgba(255,255,255,0.7);
+            border-radius: 1.5rem;
+            margin-bottom: 1.5rem;
             overflow: hidden;
-            transition: 0.1s;
         }
-        body.dark .category-block {
-            background: rgba(30, 42, 62, 0.6);
-        }
-        .category-head {
-            padding: 1rem 1.8rem;
-            background: rgba(0,0,0,0.02);
-            border-bottom: 2px solid;
+        body.dark .category-card { background: #1e2a3ecc; }
+        .cat-header {
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
-            align-items: baseline;
+            border-bottom: 3px solid;
+            font-weight: bold;
         }
-        .category-head.games { border-bottom-color: #3b82f6; }
-        .category-head.movies { border-bottom-color: #ef4444; }
-        .category-head.series { border-bottom-color: #8b5cf6; }
-        .cat-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .item-list {
+        .cat-header.games { border-bottom-color: #3b82f6; }
+        .cat-header.movies { border-bottom-color: #ef4444; }
+        .cat-header.series { border-bottom-color: #8b5cf6; }
+        .task-list {
             padding: 1rem;
-            min-height: 180px;
+            min-height: 150px;
         }
         .task-item {
+            background: rgba(255,255,255,0.5);
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: rgba(255,255,255,0.5);
-            margin-bottom: 0.7rem;
+            gap: 0.8rem;
             padding: 0.7rem 1rem;
+            margin-bottom: 0.6rem;
             border-radius: 1.2rem;
-            backdrop-filter: blur(2px);
-            transition: all 0.15s;
-            border: 1px solid rgba(0,0,0,0.03);
             cursor: grab;
         }
-        body.dark .task-item {
-            background: #1e2a3e;
-        }
-        .task-item:hover {
-            transform: translateX(-4px);
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
-        }
-        .task-check {
-            width: 1.3rem;
-            height: 1.3rem;
-            accent-color: #f4a261;
-        }
-        .task-info {
-            flex: 1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: baseline;
-        }
-        .task-name {
-            font-weight: 700;
-            font-size: 1rem;
-        }
-        .task-spec {
-            font-size: 0.7rem;
-            background: rgba(0,0,0,0.07);
-            padding: 0.2rem 0.7rem;
-            border-radius: 30px;
-        }
-        .delete-task {
-            background: none;
-            border: none;
-            color: #e53e3e;
-            font-size: 1rem;
-            cursor: pointer;
-            opacity: 0.6;
-        }
-        .add-task-panel {
+        body.dark .task-item { background: #0f1724; }
+        .task-check { width: 1.2rem; height: 1.2rem; accent-color: #f4a261; }
+        .task-info { flex: 1; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .delete-btn { background: none; border: none; color: #e53e3e; cursor: pointer; }
+        .add-panel {
             margin-top: 2rem;
             background: rgba(255,255,255,0.6);
             border-radius: 1.5rem;
-            padding: 1.2rem;
+            padding: 1rem;
         }
-        body.dark .add-task-panel {
-            background: #1e2a3e;
-        }
-        .flex-form {
+        body.dark .add-panel { background: #1e2a3ecc; }
+        .form-inline {
             display: flex;
             flex-wrap: wrap;
             gap: 0.8rem;
-            align-items: flex-end;
         }
-        .flex-form input, .flex-form select {
+        .form-inline input, .form-inline select {
             flex: 2;
-            padding: 0.7rem 1rem;
+            padding: 0.6rem 1rem;
             border-radius: 2rem;
             border: 1px solid #cbd5e1;
-            background: white;
         }
-        body.dark .flex-form input, body.dark .flex-form select {
-            background: #0f1724;
-            border-color: #2d3e56;
-            color: white;
-        }
-        .btn-add {
-            background: #2c5f8a;
-            border: none;
-            padding: 0.7rem 1.6rem;
-            border-radius: 2rem;
-            color: white;
-            font-weight: bold;
-        }
-        @media (max-width: 860px) {
-            .dashboard-grid { flex-direction: column; }
+        .btn-add { background: #2c5f8a; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 2rem; cursor: pointer; }
+        canvas { max-height: 150px; width: 100%; }
+        .share-btns { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+        .mobile-stats { display: none; position: fixed; bottom: 1rem; left: 1rem; background: #1e4668; color: white; padding: 0.7rem 1.2rem; border-radius: 3rem; z-index: 99; }
+        @media (max-width: 750px) {
+            .flex-row { flex-direction: column; }
             .sidebar-stats { position: static; width: 100%; }
-            .app-header { flex-direction: column; align-items: stretch; }
-        }
-        .floating-mobile-btn {
-            display: none;
-            position: fixed;
-            bottom: 1.5rem;
-            left: 1.5rem;
-            background: #1e4668;
-            border-radius: 3rem;
-            padding: 0.8rem 1.2rem;
-            color: white;
-            z-index: 99;
-            gap: 0.5rem;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        @media (max-width: 640px) {
-            .floating-mobile-btn { display: flex; }
-            .sidebar-stats { display: none; }
-            .sidebar-stats.open-mobile { display: block; position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: var(--bg); margin: 1rem; }
+            .mobile-stats { display: flex; gap: 0.5rem; }
         }
     </style>
 </head>
 <body>
 
-<!-- شاشة تسجيل الدخول -->
-<div id="authContainer" style="min-height:100vh; display:flex; align-items:center; justify-content:center;">
-    <div class="auth-wrapper">
-        <div class="auth-card">
-            <div class="auth-icon"><i class="fas fa-chalkboard-user"></i></div>
-            <h2>مرحباً بعودتك</h2>
-            <div class="input-group"><input type="text" id="loginName" placeholder="اسم المستخدم"></div>
-            <div class="input-group"><input type="password" id="loginPass" placeholder="كلمة المرور"></div>
-            <div class="checkbox-group"><input type="checkbox" id="rememberAuth"> <label>تذكرني</label></div>
-            <div id="authFeedback" class="error-msg"></div>
-            <div class="auth-buttons">
-                <button id="doLogin" class="btn-primary">دخول</button>
-                <button id="doSignup" class="btn-secondary">إنشاء حساب جديد</button>
-            </div>
-        </div>
+<div id="authPage" class="auth-wrap">
+    <div class="auth-card">
+        <h2><i class="fas fa-calendar-alt"></i> أهلًا بك</h2>
+        <input type="text" id="authUsername" placeholder="اسم المستخدم">
+        <input type="password" id="authPassword" placeholder="كلمة المرور">
+        <div class="checkbox"><input type="checkbox" id="rememberMe"> <label>تذكرني</label></div>
+        <div id="authError" style="color:#e53e3e; font-size:0.8rem; margin:0.5rem 0;"></div>
+        <button id="loginBtn" class="btn btn-primary">دخول</button>
+        <button id="signupBtn" class="btn btn-secondary">إنشاء حساب</button>
     </div>
 </div>
 
-<!-- واجهة التطبيق الرئيسية -->
-<div id="appMain" style="display: none;">
-    <div class="app-layout">
-        <div class="app-header">
-            <div class="logo-area"><h1><i class="fas fa-calendar-week"></i> جدول العطلة</h1></div>
-            <div class="user-controls">
-                <span id="greetingUser" style="font-weight:500;"></span>
-                <button id="darkModeBtn" class="btn-soft"><i class="fas fa-moon"></i> داكن</button>
-                <button id="logoutBtnMain" class="btn-soft"><i class="fas fa-arrow-right-from-bracket"></i> خروج</button>
+<div id="appPage" style="display: none;">
+    <div class="app-container">
+        <div class="top-bar">
+            <div class="logo"><h1><i class="fas fa-list-check"></i> جدول العطلة</h1></div>
+            <div style="display: flex; gap: 0.8rem;">
+                <span id="userGreeting"></span>
+                <button id="darkToggle" class="btn" style="width: auto; padding: 0.3rem 1rem;"><i class="fas fa-moon"></i></button>
+                <button id="logoutApp" class="btn" style="width: auto; padding: 0.3rem 1rem;">خروج</button>
             </div>
         </div>
-        <div class="dashboard-grid">
+        <div class="flex-row">
             <aside class="sidebar-stats" id="statsPanel">
-                <div class="stat-card"><h3><i class="fas fa-chart-pie"></i> الإنجاز</h3><canvas id="totalChart" width="200" height="200"></canvas></div>
-                <div class="stat-card"><h3><i class="fas fa-chart-simple"></i> التوزيع</h3><canvas id="categoryChart" width="200" height="200"></canvas></div>
-                <div class="share-buttons">
-                    <button id="shareLinkBtn"><i class="fas fa-share-nodes"></i> مشاركة الرابط</button>
-                    <button id="importLinkBtn"><i class="fas fa-link"></i> استيراد من رابط</button>
+                <h4><i class="fas fa-chart-pie"></i> الإنجاز</h4>
+                <canvas id="totalChart"></canvas>
+                <h4 style="margin-top: 1rem;"><i class="fas fa-chart-bar"></i> التوزيع</h4>
+                <canvas id="catChart"></canvas>
+                <div class="share-btns">
+                    <button id="shareBtn" class="btn" style="background:#2c5f8a;">مشاركة الرابط</button>
+                    <button id="importBtn" class="btn" style="background:transparent; border:1px solid #2c5f8a;">استيراد من رابط</button>
                 </div>
             </aside>
-            <div class="content-area" id="categoriesArea"></div>
+            <div class="content-main" id="categoriesList"></div>
         </div>
-        <div class="add-task-panel" id="addTaskPanel">
-            <h4 style="margin-bottom: 0.7rem;"><i class="fas fa-plus-circle"></i> أضف نشاطاً</h4>
-            <div class="flex-form">
-                <input type="text" id="newName" placeholder="الاسم (مثال: Spider-Verse)">
-                <select id="newType"><option value="Game">لعبة</option><option value="Movie">فيلم</option><option value="Series">مسلسل</option></select>
-                <input type="text" id="newSpec" placeholder="مواصفات / ملاحظة">
-                <button id="addTaskBtn" class="btn-add"><i class="fas fa-save"></i> حفظ</button>
+        <div class="add-panel">
+            <h4>➕ إضافة نشاط جديد</h4>
+            <div class="form-inline">
+                <input type="text" id="newTaskName" placeholder="الاسم">
+                <select id="newTaskType"><option value="Game">لعبة</option><option value="Movie">فيلم</option><option value="Series">مسلسل</option></select>
+                <input type="text" id="newTaskSpec" placeholder="مواصفات">
+                <button id="addTaskBtn" class="btn-add">إضافة</button>
             </div>
         </div>
     </div>
-    <div class="floating-mobile-btn" id="mobileStatsBtn"><i class="fas fa-chart-line"></i> إحصائيات</div>
+    <div class="mobile-stats" id="mobileStatsBtn"><i class="fas fa-chart-line"></i> إحصائيات</div>
 </div>
 
 <script>
-    // ---------- قاعدة البيانات المحلية (بدون أدوار) ----------
+    // ------------------- بيانات المستخدمين -------------------
     let currentUser = null;
-    let items = [];
+    let userItems = [];
 
-    function hashPW(pw){ let h=0; for(let i=0;i<pw.length;i++) h=((h<<5)-h)+pw.charCodeAt(i); return h.toString(); }
-    function loadUsersDB(){ const raw=localStorage.getItem("v2_users_app"); try{ return raw?JSON.parse(raw):{}; }catch(e){return{};} }
-    function saveUsersDB(db){ localStorage.setItem("v2_users_app",JSON.stringify(db)); }
-    function getDefaultTemplate(){
+    // دوال مساعدة
+    function hash(pw) { let h=0; for(let i=0;i<pw.length;i++) h=((h<<5)-h)+pw.charCodeAt(i); return h.toString(); }
+    function getUsers() { let u = localStorage.getItem("usersDB_v4"); try { return u ? JSON.parse(u) : {}; } catch(e){ return {}; } }
+    function saveUsers(users) { localStorage.setItem("usersDB_v4", JSON.stringify(users)); }
+    function defaultTasks() {
         return [
-            {id:"g1",name:"Valorant",type:"Game",spec:"i3 / 4GB ram",checked:false},
-            {id:"g2",name:"Genshin Impact",type:"Game",spec:"متوسط الإعدادات",checked:false},
-            {id:"g3",name:"Stardew Valley",type:"Game",spec:"أي جهاز",checked:false},
-            {id:"g4",name:"Terraria",type:"Game",spec:"2D",checked:false},
-            {id:"g5",name:"Rocket League",type:"Game",spec:"GTX 750 Ti",checked:false},
-            {id:"m1",name:"Inception",type:"Movie",spec:"خيال علمي",checked:false},
-            {id:"m2",name:"The Dark Knight",type:"Movie",spec:"جريمة/حركة",checked:false},
-            {id:"m3",name:"Interstellar",type:"Movie",spec:"فضاء",checked:false},
-            {id:"m4",name:"Parasite",type:"Movie",spec:"دراما",checked:false},
-            {id:"m5",name:"The Social Network",type:"Movie",spec:"سيرة ذاتية",checked:false},
-            {id:"s1",name:"Breaking Bad",type:"Series",spec:"5 مواسم",checked:false},
-            {id:"s2",name:"Stranger Things",type:"Series",spec:"خيال",checked:false},
-            {id:"s3",name:"The Witcher",type:"Series",spec:"فانتازيا",checked:false},
-            {id:"s4",name:"Money Heist",type:"Series",spec:"تشويق",checked:false},
-            {id:"s5",name:"Black Mirror",type:"Series",spec:"أنثولوجيا",checked:false}
+            { id: "g1", name: "Valorant", type: "Game", spec: "i3/4GB", checked: false },
+            { id: "g2", name: "Genshin Impact", type: "Game", spec: "GT 1030", checked: false },
+            { id: "g3", name: "Stardew Valley", type: "Game", spec: "خفيف", checked: false },
+            { id: "g4", name: "Terraria", type: "Game", spec: "ثنائي الأبعاد", checked: false },
+            { id: "g5", name: "Rocket League", type: "Game", spec: "GTX 750", checked: false },
+            { id: "m1", name: "Inception", type: "Movie", spec: "خيال علمي", checked: false },
+            { id: "m2", name: "The Dark Knight", type: "Movie", spec: "جريمة", checked: false },
+            { id: "m3", name: "Interstellar", type: "Movie", spec: "فضاء", checked: false },
+            { id: "m4", name: "Parasite", type: "Movie", spec: "دراما", checked: false },
+            { id: "m5", name: "The Social Network", type: "Movie", spec: "سيرة", checked: false },
+            { id: "s1", name: "Breaking Bad", type: "Series", spec: "5 مواسم", checked: false },
+            { id: "s2", name: "Stranger Things", type: "Series", spec: "خيال", checked: false },
+            { id: "s3", name: "The Witcher", type: "Series", spec: "فانتازيا", checked: false },
+            { id: "s4", name: "Money Heist", type: "Series", spec: "تشويق", checked: false },
+            { id: "s5", name: "Black Mirror", type: "Series", spec: "أنثولوجيا", checked: false }
         ];
     }
-    function signup(uname,pwd){
-        if(!uname.trim()||!pwd.trim()) return false;
-        let db=loadUsersDB();
-        if(db[uname]) return false;
-        db[uname]={ password:hashPW(pwd), data: getDefaultTemplate() };
-        saveUsersDB(db);
+
+    function signup(u,p){
+        if(!u.trim() || !p.trim()) return false;
+        let users = getUsers();
+        if(users[u]) return false;
+        users[u] = { password: hash(p), data: defaultTasks() };
+        saveUsers(users);
         return true;
     }
-    function login(uname,pwd){
-        let db=loadUsersDB();
-        if(db[uname] && db[uname].password===hashPW(pwd)){
-            currentUser=uname;
-            items=JSON.parse(JSON.stringify(db[uname].data));
+    function login(u,p){
+        let users = getUsers();
+        if(users[u] && users[u].password === hash(p)){
+            currentUser = u;
+            userItems = JSON.parse(JSON.stringify(users[u].data));
             return true;
         }
         return false;
     }
-    function saveCurrentUserData(){
+    function saveUserData(){
         if(!currentUser) return;
-        let db=loadUsersDB();
-        if(db[currentUser]){ db[currentUser].data=JSON.parse(JSON.stringify(items)); saveUsersDB(db); }
+        let users = getUsers();
+        if(users[currentUser]){
+            users[currentUser].data = JSON.parse(JSON.stringify(userItems));
+            saveUsers(users);
+        }
     }
-    function saveSession(uname,rem){
-        if(rem) localStorage.setItem("active_session_v2",uname);
-        else sessionStorage.setItem("active_session_v2",uname);
+    function setSession(u, rem){
+        if(rem) localStorage.setItem("activeSesh", u);
+        else sessionStorage.setItem("activeSesh", u);
     }
-    function clearSession(){ localStorage.removeItem("active_session_v2"); sessionStorage.removeItem("active_session_v2");}
-    function getStoredSession(){ return localStorage.getItem("active_session_v2") || sessionStorage.getItem("active_session_v2");}
-    function tryAutoLogin(){
-        let stored=getStoredSession();
-        if(stored && loadUsersDB()[stored]){ currentUser=stored; items=JSON.parse(JSON.stringify(loadUsersDB()[stored].data)); return true;}
+    function clearSession(){
+        localStorage.removeItem("activeSesh");
+        sessionStorage.removeItem("activeSesh");
+    }
+    function getSession(){
+        return localStorage.getItem("activeSesh") || sessionStorage.getItem("activeSesh");
+    }
+    function autoLogin(){
+        let ses = getSession();
+        if(ses && getUsers()[ses]){
+            currentUser = ses;
+            userItems = JSON.parse(JSON.stringify(getUsers()[ses].data));
+            return true;
+        }
         return false;
     }
-    // الرسوم البيانية والسحب
-    let totalChart,catChart,sortableGames,sortableMovies,sortableSeries;
+
+    // ------------------- واجهة المستخدم -------------------
+    let totalChart, catChart;
+    let sortableInst = [];
+
     function renderCharts(){
-        let total=items.length,completed=items.filter(i=>i.checked).length;
+        let total = userItems.length;
+        let done = userItems.filter(i=>i.checked).length;
         if(totalChart) totalChart.destroy();
-        let ctx=document.getElementById('totalChart').getContext('2d');
-        totalChart=new Chart(ctx,{type:'doughnut',data:{labels:['منجز','متبقي'],datasets:[{data:[completed,total-completed],backgroundColor:['#f4a261','#2c5f8a']}]}});
-        let cats={Game:0,Movie:0,Series:0};
-        items.forEach(i=>{if(i.type==='Game') cats.Game++; else if(i.type==='Movie') cats.Movie++; else cats.Series++;});
+        let ctx = document.getElementById('totalChart').getContext('2d');
+        totalChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['منجز', 'متبقي'], datasets: [{ data: [done, total-done], backgroundColor: ['#f4a261','#2c5f8a'] }] } });
+        let catCount = { Game:0, Movie:0, Series:0 };
+        userItems.forEach(i=>{ if(i.type==='Game') catCount.Game++; else if(i.type==='Movie') catCount.Movie++; else catCount.Series++; });
         if(catChart) catChart.destroy();
-        let ctx2=document.getElementById('categoryChart').getContext('2d');
-        catChart=new Chart(ctx2,{type:'bar',data:{labels:['ألعاب','أفلام','مسلسلات'],datasets:[{data:[cats.Game,cats.Movie,cats.Series],backgroundColor:'#3b82f6'}]}});
+        let ctx2 = document.getElementById('catChart').getContext('2d');
+        catChart = new Chart(ctx2, { type: 'bar', data: { labels: ['ألعاب','أفلام','مسلسلات'], datasets: [{ data: [catCount.Game, catCount.Movie, catCount.Series], backgroundColor: '#3b82f6' }] } });
     }
-    function renderCategories(){
-        let groups={Game:[],Movie:[],Series:[]};
-        items.forEach(i=>groups[i.type]?.push(i));
-        const container=document.getElementById('categoriesArea');
-        container.innerHTML='';
-        const catsMeta=[
-            {key:'Game',label:'🎮 ألعاب متوسطة',icon:'fa-gamepad',color:'games'},
-            {key:'Movie',label:'🎬 أفلام',icon:'fa-film',color:'movies'},
-            {key:'Series',label:'📺 مسلسلات',icon:'fa-tv',color:'series'}
+
+    function renderTasks(){
+        let container = document.getElementById('categoriesList');
+        if(!container) return;
+        container.innerHTML = '';
+        let groups = { Game: [], Movie: [], Series: [] };
+        userItems.forEach(i => groups[i.type].push(i));
+        let categories = [
+            { key: 'Game', title: '🎮 ألعاب للأجهزة المتوسطة', icon: 'fa-gamepad', color: 'games' },
+            { key: 'Movie', title: '🍿 أفلام', icon: 'fa-film', color: 'movies' },
+            { key: 'Series', title: '📺 مسلسلات', icon: 'fa-tv', color: 'series' }
         ];
-        catsMeta.forEach(meta=>{
-            let card=document.createElement('div'); card.className='category-block';
-            let catItems=groups[meta.key];
-            let compCount=catItems.filter(i=>i.checked).length;
-            card.innerHTML=`
-                <div class="category-head ${meta.color}"><div class="cat-title"><i class="fas ${meta.icon}"></i> ${meta.label}</div><span class="cat-counter">✔️ ${compCount}/${catItems.length}</span></div>
-                <div class="item-list" data-cat="${meta.key}" id="list-${meta.key}"></div>
+        categories.forEach(cat => {
+            let itemsList = groups[cat.key];
+            let completed = itemsList.filter(i=>i.checked).length;
+            let card = document.createElement('div');
+            card.className = 'category-card';
+            card.innerHTML = `
+                <div class="cat-header ${cat.color}">
+                    <span><i class="fas ${cat.icon}"></i> ${cat.title}</span>
+                    <span>✔️ ${completed}/${itemsList.length}</span>
+                </div>
+                <div class="task-list" data-cat="${cat.key}" id="list-${cat.key}"></div>
             `;
             container.appendChild(card);
-            let listDiv=card.querySelector('.item-list');
-            catItems.forEach(item=>{
-                let row=document.createElement('div'); row.className='task-item'; row.setAttribute('data-id',item.id);
-                row.innerHTML=`
-                    <input type="checkbox" class="task-check" data-id="${item.id}" ${item.checked?'checked':''}>
-                    <div class="task-info"><span class="task-name">${escapeHtml(item.name)}</span>${item.spec?`<span class="task-spec"><i class="fas fa-microchip"></i> ${escapeHtml(item.spec)}</span>`:''}</div>
-                    <button class="delete-task" data-id="${item.id}"><i class="fas fa-trash-can"></i></button>
+            let listDiv = card.querySelector(`.task-list`);
+            itemsList.forEach(item => {
+                let taskDiv = document.createElement('div');
+                taskDiv.className = 'task-item';
+                taskDiv.setAttribute('data-id', item.id);
+                taskDiv.innerHTML = `
+                    <input type="checkbox" class="task-check" data-id="${item.id}" ${item.checked ? 'checked' : ''}>
+                    <div class="task-info"><strong>${escapeHtml(item.name)}</strong> ${item.spec ? `<span style="font-size:0.7rem; background:#e2e8f0; padding:0.1rem 0.5rem; border-radius:40px;">⚙️ ${escapeHtml(item.spec)}</span>` : ''}</div>
+                    <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash"></i></button>
                 `;
-                listDiv.appendChild(row);
+                listDiv.appendChild(taskDiv);
             });
         });
-        attachEventsToCheckboxes();
-        attachDeleteEvents();
+        attachEvents();
         initSortable();
         renderCharts();
     }
-    function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));}
-    function attachEventsToCheckboxes(){
-        document.querySelectorAll('.task-check').forEach(cb=>{
-            let newCb=cb.cloneNode(true);
-            cb.parentNode.replaceChild(newCb,cb);
-            newCb.addEventListener('change',(e)=>{
-                let id=newCb.getAttribute('data-id');
-                let item=items.find(i=>i.id===id);
-                if(item){ item.checked=newCb.checked; saveCurrentUserData(); renderCategories(); }
+
+    function escapeHtml(s){ return s.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+
+    function attachEvents(){
+        // تغيير الـ checkbox
+        document.querySelectorAll('.task-check').forEach(cb => {
+            let newCb = cb.cloneNode(true);
+            cb.parentNode.replaceChild(newCb, cb);
+            newCb.addEventListener('change', (e) => {
+                let id = newCb.getAttribute('data-id');
+                let item = userItems.find(i=>i.id === id);
+                if(item) { item.checked = newCb.checked; saveUserData(); renderTasks(); }
+            });
+        });
+        // حذف العنصر
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            let newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+            newBtn.addEventListener('click', () => {
+                let id = newBtn.getAttribute('data-id');
+                if(confirm('حذف هذا النشاط؟')) {
+                    userItems = userItems.filter(i=>i.id !== id);
+                    saveUserData();
+                    renderTasks();
+                }
             });
         });
     }
-    function attachDeleteEvents(){
-        document.querySelectorAll('.delete-task').forEach(btn=>{
-            let newBtn=btn.cloneNode(true);
-            btn.parentNode.replaceChild(newBtn,btn);
-            newBtn.addEventListener('click',()=>{
-                let id=newBtn.getAttribute('data-id');
-                if(confirm('احذف هذا العنصر؟')){ items=items.filter(i=>i.id!==id); saveCurrentUserData(); renderCategories(); }
-            });
-        });
-    }
+
     function initSortable(){
-        if(sortableGames) sortableGames.destroy();
-        if(sortableMovies) sortableMovies.destroy();
-        if(sortableSeries) sortableSeries.destroy();
-        let gameList=document.getElementById('list-Game');
-        let movieList=document.getElementById('list-Movie');
-        let seriesList=document.getElementById('list-Series');
-        if(gameList) sortableGames=new Sortable(gameList,{animation:150,onEnd:()=>{ reorderFromDOM('Game'); }});
-        if(movieList) sortableMovies=new Sortable(movieList,{animation:150,onEnd:()=>{ reorderFromDOM('Movie'); }});
-        if(seriesList) sortableSeries=new Sortable(seriesList,{animation:150,onEnd:()=>{ reorderFromDOM('Series'); }});
+        if(sortableInst.length) sortableInst.forEach(s=>s.destroy());
+        sortableInst = [];
+        ['Game','Movie','Series'].forEach(cat => {
+            let el = document.getElementById(`list-${cat}`);
+            if(el){
+                let sort = new Sortable(el, {
+                    animation: 150,
+                    onEnd: () => {
+                        let newOrder = [];
+                        el.querySelectorAll('.task-item').forEach(div => {
+                            let id = div.getAttribute('data-id');
+                            let found = userItems.find(i=>i.id === id);
+                            if(found) newOrder.push(found);
+                        });
+                        let otherItems = userItems.filter(i => i.type !== cat);
+                        userItems = [...otherItems, ...newOrder];
+                        saveUserData();
+                        renderTasks();
+                    }
+                });
+                sortableInst.push(sort);
+            }
+        });
     }
-    function reorderFromDOM(cat){
-        let container=document.getElementById(`list-${cat}`);
-        if(!container) return;
-        let newOrder=[];
-        container.querySelectorAll('.task-item').forEach(div=>{ let id=div.getAttribute('data-id'); let found=items.find(i=>i.id===id); if(found) newOrder.push(found); });
-        let otherItems=items.filter(i=>i.type!==cat);
-        items=[...otherItems,...newOrder];
-        saveCurrentUserData();
-        renderCategories();
-    }
+
     function addNewTask(){
-        let name=document.getElementById('newName').value.trim();
-        if(!name){ alert('يرجى إدخال اسم النشاط'); return; }
-        let type=document.getElementById('newType').value;
-        let spec=document.getElementById('newSpec').value.trim();
-        if(!spec) spec='—';
-        let newId='task_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
-        items.push({id:newId,name,type,spec,checked:false});
-        saveCurrentUserData();
-        renderCategories();
-        document.getElementById('newName').value='';
-        document.getElementById('newSpec').value='';
+        let name = document.getElementById('newTaskName').value.trim();
+        if(!name) { alert('الرجاء كتابة الاسم'); return; }
+        let type = document.getElementById('newTaskType').value;
+        let spec = document.getElementById('newTaskSpec').value.trim();
+        if(!spec) spec = 'بدون تفاصيل';
+        let newId = 'task_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
+        userItems.push({ id: newId, name, type, spec, checked: false });
+        saveUserData();
+        renderTasks();
+        document.getElementById('newTaskName').value = '';
+        document.getElementById('newTaskSpec').value = '';
     }
-    function exportToLink(){
-        let encoded=btoa(encodeURIComponent(JSON.stringify(items)));
-        let url=`${window.location.origin}${window.location.pathname}?share=${encoded}`;
-        prompt('انسخ الرابط لمشاركة جدولك:',url);
+
+    function shareByLink(){
+        let dataStr = JSON.stringify(userItems);
+        let encoded = btoa(encodeURIComponent(dataStr));
+        let url = `${window.location.origin}${window.location.pathname}?share=${encoded}`;
+        prompt('انسخ هذا الرابط لمشاركة جدولك:', url);
     }
+
     function importFromLink(){
-        let params=new URLSearchParams(window.location.search);
-        let shared=params.get('share');
+        let params = new URLSearchParams(window.location.search);
+        let shared = params.get('share');
         if(shared){
-            try{
-                let decoded=decodeURIComponent(atob(shared));
-                let imported=JSON.parse(decoded);
-                if(Array.isArray(imported)){ items=imported; saveCurrentUserData(); renderCategories(); alert('تم استيراد الجدول!'); window.history.replaceState({},'',window.location.pathname);}
-                else throw new Error();
-            }catch(e){ alert('رابط غير صالح'); }
-        } else alert('لا يوجد جدول مشترك في الرابط');
+            try {
+                let decoded = decodeURIComponent(atob(shared));
+                let imported = JSON.parse(decoded);
+                if(Array.isArray(imported)){
+                    userItems = imported;
+                    saveUserData();
+                    renderTasks();
+                    alert('تم استيراد الجدول!');
+                    window.history.replaceState({}, '', window.location.pathname);
+                } else throw new Error();
+            } catch(e){ alert('الرابط غير صالح'); }
+        } else {
+            alert('لا يوجد جدول مشترك في هذا الرابط');
+        }
     }
-    function showAppUI(){
-        document.getElementById('authContainer').style.display='none';
-        document.getElementById('appMain').style.display='block';
-        document.getElementById('greetingUser').innerHTML=`<i class="fas fa-user-astronaut"></i> ${currentUser}`;
-        renderCategories();
+
+    // تبديل الواجهات
+    function showApp(){
+        document.getElementById('authPage').style.display = 'none';
+        document.getElementById('appPage').style.display = 'block';
+        document.getElementById('userGreeting').innerHTML = `<i class="fas fa-user"></i> ${currentUser}`;
+        renderTasks();
     }
-    function showAuthUI(){
-        document.getElementById('authContainer').style.display='flex';
-        document.getElementById('appMain').style.display='none';
-        currentUser=null;
+    function showAuth(){
+        document.getElementById('authPage').style.display = 'flex';
+        document.getElementById('appPage').style.display = 'none';
+        currentUser = null;
     }
-    document.getElementById('doLogin').onclick=()=>{
-        let u=document.getElementById('loginName').value.trim();
-        let p=document.getElementById('loginPass').value;
-        let rem=document.getElementById('rememberAuth').checked;
-        if(login(u,p)){ saveSession(u,rem); showAppUI(); }
-        else document.getElementById('authFeedback').innerText='بيانات غير صحيحة';
+
+    // الأحداث
+    document.getElementById('loginBtn').onclick = () => {
+        let u = document.getElementById('authUsername').value.trim();
+        let p = document.getElementById('authPassword').value;
+        let rem = document.getElementById('rememberMe').checked;
+        if(login(u,p)){
+            setSession(u, rem);
+            showApp();
+        } else {
+            document.getElementById('authError').innerText = 'خطأ في الاسم أو كلمة المرور';
+        }
     };
-    document.getElementById('doSignup').onclick=()=>{
-        let u=document.getElementById('loginName').value.trim();
-        let p=document.getElementById('loginPass').value;
-        let rem=document.getElementById('rememberAuth').checked;
-        if(!u||!p){ document.getElementById('authFeedback').innerText='املأ جميع الحقول'; return; }
-        if(signup(u,p)){ login(u,p); saveSession(u,rem); showAppUI(); }
-        else document.getElementById('authFeedback').innerText='اسم المستخدم موجود';
+    document.getElementById('signupBtn').onclick = () => {
+        let u = document.getElementById('authUsername').value.trim();
+        let p = document.getElementById('authPassword').value;
+        let rem = document.getElementById('rememberMe').checked;
+        if(!u || !p){ document.getElementById('authError').innerText = 'املأ جميع الحقول'; return; }
+        if(signup(u,p)){
+            login(u,p);
+            setSession(u, rem);
+            showApp();
+        } else {
+            document.getElementById('authError').innerText = 'اسم المستخدم موجود';
+        }
     };
-    document.getElementById('logoutBtnMain').onclick=()=>{ clearSession(); showAuthUI(); };
-    document.getElementById('addTaskBtn').onclick=addNewTask;
-    document.getElementById('shareLinkBtn').onclick=exportToLink;
-    document.getElementById('importLinkBtn').onclick=importFromLink;
+    document.getElementById('logoutApp').onclick = () => { clearSession(); showAuth(); };
+    document.getElementById('addTaskBtn').onclick = addNewTask;
+    document.getElementById('shareBtn').onclick = shareByLink;
+    document.getElementById('importBtn').onclick = importFromLink;
+
     // الوضع المظلم
-    let darkToggle=document.getElementById('darkModeBtn');
-    darkToggle.onclick=()=>{ document.body.classList.toggle('dark'); localStorage.setItem('dark_theme',document.body.classList.contains('dark')); };
-    if(localStorage.getItem('dark_theme')==='true') document.body.classList.add('dark');
-    // الجوال: اظهار الإحصائيات
-    let mobileBtn=document.getElementById('mobileStatsBtn');
-    let sidePanel=document.getElementById('statsPanel');
-    mobileBtn?.addEventListener('click',()=>{ sidePanel.classList.toggle('open-mobile'); setTimeout(()=>{ if(!sidePanel.classList.contains('open-mobile')) sidePanel.classList.remove('open-mobile'); },5000); });
-    if(tryAutoLogin()) showAppUI(); else showAuthUI();
+    let dark = localStorage.getItem('darkTheme') === 'true';
+    if(dark) document.body.classList.add('dark');
+    document.getElementById('darkToggle').onclick = () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkTheme', document.body.classList.contains('dark'));
+    };
+    // زر الإحصائيات للجوال
+    let mobileBtn = document.getElementById('mobileStatsBtn');
+    let panel = document.getElementById('statsPanel');
+    if(mobileBtn){
+        mobileBtn.onclick = () => {
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+            setTimeout(() => { panel.style.display = 'block'; }, 5000);
+        };
+    }
+
+    if(autoLogin()) showApp();
+    else showAuth();
 </script>
 </body>
 </html>
