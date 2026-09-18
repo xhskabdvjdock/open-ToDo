@@ -1,0 +1,23 @@
+# Production PostgreSQL for Munjez.
+# Usage:
+#   docker compose up -d db
+#   # point DATABASE_URL to postgresql://munjez:munjez@localhost:5432/munjez
+#   # set provider = "postgresql" in prisma/schema.prisma
+#   npm run db:migrate
+
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: munjez-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: munjez
+      POSTGRES_PASSWORD: munjez
+      POSTGRES_DB: munjez
+    ports:
+      - "5432:5432"
+    volumes:
+      - munjez-pgdata:/var/lib/postgresql/data
+
+volumes:
+  munjez-pgdata:

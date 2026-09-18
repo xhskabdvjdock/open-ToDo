@@ -1,0 +1,86 @@
+@import "@dawod/thmanyah-font-web/sans.css";
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Thmanyah Sans", "Segoe UI", Tahoma, Arial, ui-sans-serif,
+    system-ui, sans-serif;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Accessible, visible focus for keyboard users */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-indigo-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Subtle scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(161 161 170 / 0.5) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(161 161 170 / 0.45);
+  border-radius: 8px;
+}
+
+/* Minimal, purposeful animations */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes slide-in-side {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+html[dir="rtl"] .anim-slide-in-side {
+  animation-name: slide-in-side-rtl;
+}
+@keyframes slide-in-side-rtl {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.anim-fade-in { animation: fade-in 120ms ease-out; }
+.anim-pop-in { animation: pop-in 160ms ease-out; }
+.anim-slide-in-side { animation: slide-in-side 180ms ease-out; }
+/* Backwards-compatible alias */
+.anim-slide-in-right { animation: slide-in-side 180ms ease-out; }
+html[dir="rtl"] .anim-slide-in-right {
+  animation-name: slide-in-side-rtl;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-in, .anim-pop-in, .anim-slide-in-side, .anim-slide-in-right {
+    animation: none;
+  }
+}
+
+/* Checkbox strike-through transition */
+.task-title-done {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+/* Arabic-Indic tabular figures for stats and counts */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,23 @@
+export function PageHeader({
+  title,
+  description,
+  action,
+}: {
+  title: string;
+  description?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="mb-5 flex items-start justify-between gap-4">
+      <div>
+        <h1 className="text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          {title}
+        </h1>
+        {description ? (
+          <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">{description}</p>
+        ) : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
+    </div>
+  );
+}

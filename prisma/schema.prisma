@@ -1,0 +1,140 @@
+// Munjez — Database schema (PostgreSQL).
+//
+// Production database: Supabase Postgres (see .env).
+// DATABASE_URL uses the connection pooler (PgBouncer, port 6543) for runtime
+// queries; DIRECT_URL uses the direct connection (port 5432) for migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  COMPLETED
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ActivityAction {
+  CREATED
+  UPDATED
+  COMPLETED
+  REOPENED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  passwordHash String
+  // IANA timezone, e.g. "Asia/Riyadh". Used for Today/Upcoming/Overdue logic.
+  timezone     String   @default("UTC")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  projects   Project[]
+  tasks      Task[]
+  tags       Tag[]
+  activities TaskActivity[]
+
+  @@index([email])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  // Hex accent color, e.g. "#4f46e5".
+  color       String   @default("#4f46e5")
+  // Lucide icon name, e.g. "briefcase". Validated against an allow-list.
+  icon        String   @default("folder")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tasks Task[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  color     String   @default("#64748b")
+  createdAt DateTime @default(now())
+
+  tasks TaskTag[]
+
+  @@unique([userId, name])
+  @@index([userId])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project?   @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  title       String
+  description String?
+  status      TaskStatus @default(TODO)
+  // Remembers the pre-completion status so "reopen" restores it exactly.
+  statusBefore TaskStatus?
+  priority    Priority   @default(MEDIUM)
+  dueDate     DateTime?
+  completedAt DateTime?
+  // Manual ordering within a list. Reordering persists this value.
+  order       Float      @default(0)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  tags       TaskTag[]
+  activities TaskActivity[]
+
+  @@index([userId, status])
+  @@index([userId, dueDate])
+  @@index([userId, projectId])
+  @@index([projectId])
+}
+
+model TaskTag {
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  tagId  String
+  tag    Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([taskId, tagId])
+  @@index([tagId])
+}
+
+model TaskActivity {
+  id        String         @id @default(cuid())
+  taskId    String
+  task      Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  action    ActivityAction
+  // Human-readable detail, e.g. "Priority changed from High to Urgent".
+  detail    String?
+  createdAt DateTime       @default(now())
+
+  @@index([taskId, createdAt])
+  @@index([userId])
+}
