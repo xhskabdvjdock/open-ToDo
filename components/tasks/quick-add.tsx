@@ -35,14 +35,16 @@ export function QuickAdd({
     e.preventDefault();
     const value = title.trim();
     if (!value || saving) return;
+    // Clear instantly so adding feels immediate; restore on failure.
+    setTitle("");
     setSaving(true);
     const res = await createTask({ title: value, projectId, dueDate });
     setSaving(false);
     if (!res.ok) {
+      setTitle(value);
       toast.error(res.error);
       return;
     }
-    setTitle("");
     toast.success(tt.added);
     inputRef.current?.focus();
   }

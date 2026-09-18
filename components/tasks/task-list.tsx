@@ -24,6 +24,27 @@ export function TaskList({
   const [dragId, setDragId] = React.useState<string | null>(null);
   const [busy, setBusy] = React.useState(false);
 
+  // Optimistic ordering: moves render instantly, the server confirms in the
+  // background, and fresh server data always wins (render-time resync).
+  const [orderOverride, setOrderOverride] = React.useState<string[] | null>(null);
+  const [syncedKey, setSyncedKey] = React.useState(() => orderKey(tasks));
+  const currentKey = orderKey(tasks);
+  if (syncedKey !== currentKey) {
+    setSyncedKey(currentKey);
+    setOrderOverride(null);
+  }
+
+  const visible = React.useMemo(() => {
+    if (!orderOverride) return tasks;
+    const byId = new Map(tasks.map((task) => [task.id, task]));
+    const ordered = orderOverride.map((id) => byId.get(id)).filter((x) => x !== undefined);
+    // Any new server tasks not in the override are appended.
+    for (const task of tasks) {
+      if (!orderOverride.includes(task.id)) ordered.push(task);
+    }
+    return ordered;
+  }, [tasks, orderOverride]);
+
   if (tasks.length === 0) {
     return (
       <EmptyState
@@ -39,21 +60,26 @@ export function TaskList({
     );
   }
 
-  async function persistOrder(movedId: string, predecessorId: string | null, successorId: string | null) {
+  async function persistOrder(movedId: string, predecessorId: string | null, successorId: string | null, optimisticIds: string[]) {
+    setOrderOverride(optimisticIds);
     setBusy(true);
     // predecessor = item that stays right before, successor = right after.
     const res = await reorderTask({ id: movedId, beforeId: predecessorId, afterId: successorId });
     setBusy(false);
-    if (!res.ok) toast.error(res.error);
+    if (!res.ok) {
+      setOrderOverride(null); // rollback to server order
+      toast.error(res.error);
+    }
   }
 
   /** Drop onto a row inserts the dragged task right before that row. */
   function handleDropOn(targetId: string) {
-    if (!dragId || dragId === targetId) {
+    if (busy || !dragId || dragId === targetId) {
       setDragId(null);
       return;
     }
-    const without = tasks.map((t) => t.id).filter((id) => id !== dragId);
+    const ids = visible.map((task) => task.id);
+    const without = ids.filter((id) => id !== dragId);
     const insertIdx = without.indexOf(targetId);
     if (insertIdx === -1) {
       setDragId(null);
@@ -61,25 +87,29 @@ export function TaskList({
     }
     const predecessor = without[insertIdx - 1] ?? null;
     const moved = dragId;
+    const optimisticIds = [...without.slice(0, insertIdx), moved, ...without.slice(insertIdx)];
     setDragId(null);
-    void persistOrder(moved, predecessor, targetId);
+    void persistOrder(moved, predecessor, targetId, optimisticIds);
   }
 
   /** Arrow buttons move the task one position (same persisted order). */
   function handleMove(id: string, direction: -1 | 1) {
-    const idx = tasks.findIndex((t) => t.id === id);
+    if (busy) return;
+    const ids = visible.map((task) => task.id);
+    const idx = ids.indexOf(id);
     const newIdx = idx + direction;
-    if (idx === -1 || newIdx < 0 || newIdx >= tasks.length) return;
-    const without = tasks.map((t) => t.id).filter((x) => x !== id);
+    if (idx === -1 || newIdx < 0 || newIdx >= ids.length) return;
+    const without = ids.filter((x) => x !== id);
     // In the list without the moved item, it lands at newIdx.
     const predecessor = without[newIdx - 1] ?? null;
     const successor = without[newIdx] ?? null;
-    void persistOrder(id, predecessor, successor);
+    const optimisticIds = [...without.slice(0, newIdx), id, ...without.slice(newIdx)];
+    void persistOrder(id, predecessor, successor, optimisticIds);
   }
 
   return (
     <ul className="space-y-2" aria-label={t.tasks.listLabel}>
-      {tasks.map((task) => (
+      {visible.map((task) => (
         <li key={task.id}>
           <TaskItem
             task={task}
@@ -95,4 +125,8 @@ export function TaskList({
       ))}
     </ul>
   );
+}
+
+function orderKey(tasks: TaskWithRelations[]): string {
+  return tasks.map((t) => `${t.id}:${t.order}:${t.status}:${t.updatedAt}`).join("|");
 }
