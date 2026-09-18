@@ -68,6 +68,7 @@ const en: Dict = {
     signIn: "Sign in",
     signingIn: "Signing in…",
     invalidCreds: "Invalid email or password. Please try again.",
+    authError: "Could not reach the sign-in service. Check your connection and try again.",
     registerTitle: "Create your account",
     registerSub: "Free, private, and ready in seconds.",
     name: "Name",

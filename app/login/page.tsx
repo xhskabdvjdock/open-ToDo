@@ -29,7 +29,9 @@ export default function LoginPage() {
     });
     setPending(false);
     if (!res || res.error) {
-      setError(a.invalidCreds);
+      // "CredentialsSignin" means wrong email/password. Any other error
+      // means the sign-in service itself failed (misconfiguration/network).
+      setError(res && res.error !== "CredentialsSignin" ? a.authError : a.invalidCreds);
       return;
     }
     router.push("/dashboard");
