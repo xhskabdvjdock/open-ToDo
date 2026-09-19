@@ -68,7 +68,7 @@ export async function changePassword(input: unknown): Promise<ActionResult<null>
 
   await db.user.update({
     where: { id: user.id },
-    data: { passwordHash: await bcrypt.hash(parsed.data.newPassword, 12) },
+    data: { passwordHash: await bcrypt.hash(parsed.data.newPassword, 10) },
   });
   return { ok: true, data: null };
 }

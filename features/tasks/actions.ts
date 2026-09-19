@@ -26,9 +26,20 @@ async function strings() {
 }
 
 function revalidateApp() {
-  // Task data appears in every workspace view; revalidate the whole
-  // authenticated layout so counts, lists and stats never go stale.
+  // Mutations that change counts/statuses: revalidate the whole
+  // authenticated layout so sidebar counts, lists and stats never go stale.
   revalidatePath("/", "layout");
+}
+
+function revalidateTaskPages() {
+  // Content-only changes (text, order, priority…): refresh every task list
+  // WITHOUT refetching the sidebar layout (counts/projects/tags), which is
+  // the expensive part of each server round-trip.
+  for (const p of ["/dashboard", "/inbox", "/today", "/upcoming", "/completed", "/search"]) {
+    revalidatePath(p);
+  }
+  revalidatePath("/projects", "page");
+  revalidatePath("/projects/[id]", "page");
 }
 
 type TaskWithRelations = Prisma.TaskGetPayload<{
@@ -80,15 +91,18 @@ export async function createTask(input: unknown): Promise<ActionResult<{ id: str
     return fail(a.invalidDate);
   }
 
-  if (projectId) {
-    const project = await db.project.findFirst({ where: { id: projectId, userId: user.id } });
-    if (!project) return fail(a.noProject);
-  }
-
-  if (tagIds && tagIds.length > 0) {
-    const count = await db.tag.count({ where: { id: { in: tagIds }, userId: user.id } });
-    if (count !== tagIds.length) return fail(a.noTags);
-  }
+  // Independent checks run concurrently — one network round-trip instead of three.
+  const [project, matchingTags, order] = await Promise.all([
+    projectId
+      ? db.project.findFirst({ where: { id: projectId, userId: user.id } })
+      : Promise.resolve(null),
+    tagIds && tagIds.length > 0
+      ? db.tag.count({ where: { id: { in: tagIds }, userId: user.id } })
+      : Promise.resolve(0),
+    nextOrder(user.id),
+  ]);
+  if (projectId && !project) return fail(a.noProject);
+  if (tagIds && tagIds.length > 0 && matchingTags !== tagIds.length) return fail(a.noTags);
 
   const task = await db.task.create({
     data: {
@@ -100,7 +114,7 @@ export async function createTask(input: unknown): Promise<ActionResult<{ id: str
       dueDate: due,
       completedAt: status === "COMPLETED" ? new Date() : null,
       projectId: projectId ?? null,
-      order: await nextOrder(user.id),
+      order,
       tags: tagIds?.length
         ? { create: tagIds.map((tagId) => ({ tagId })) }
         : undefined,
@@ -147,15 +161,17 @@ export async function updateTask(input: unknown): Promise<ActionResult<{ id: str
     }
   }
 
-  if (projectId !== undefined && projectId !== null) {
-    const project = await db.project.findFirst({ where: { id: projectId, userId: user.id } });
-    if (!project) return fail(a.noProject);
-  }
-
-  if (tagIds) {
-    const count = await db.tag.count({ where: { id: { in: tagIds }, userId: user.id } });
-    if (count !== tagIds.length) return fail(a.noTags);
-  }
+  // Independent checks run concurrently — one network round-trip instead of two.
+  const [project, matchingTags] = await Promise.all([
+    projectId !== undefined && projectId !== null
+      ? db.project.findFirst({ where: { id: projectId, userId: user.id } })
+      : Promise.resolve(null),
+    tagIds
+      ? db.tag.count({ where: { id: { in: tagIds }, userId: user.id } })
+      : Promise.resolve(0),
+  ]);
+  if (projectId !== undefined && projectId !== null && !project) return fail(a.noProject);
+  if (tagIds && matchingTags !== tagIds.length) return fail(a.noTags);
 
   // Build a human-readable activity summary of what actually changed.
   const changes: string[] = [];
@@ -223,7 +239,10 @@ export async function updateTask(input: unknown): Promise<ActionResult<{ id: str
       : []),
   ]);
 
-  revalidateApp();
+  // Status changes move tasks between views/counts → full revalidation.
+  // Pure content edits only refresh the lists (sidebar stays cached).
+  if (nextStatus !== existing.status) revalidateApp();
+  else revalidateTaskPages();
   return { ok: true, data: { id } };
 }
 
@@ -416,7 +435,8 @@ export async function reorderTask(input: unknown): Promise<ActionResult<{ id: st
   else order = await nextOrder(user.id);
 
   await db.task.update({ where: { id }, data: { order } });
-  revalidateApp();
+  // Order never changes counts — lists only, sidebar stays cached.
+  revalidateTaskPages();
   return { ok: true, data: { id } };
 }
 

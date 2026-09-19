@@ -41,7 +41,10 @@ export async function register(input: unknown): Promise<ActionResult<{ email: st
     return fail(a.usernameTaken);
   }
 
-  const passwordHash = await bcrypt.hash(password, 12);
+  // Cost 10: fast enough on serverless CPUs (~80ms) while remaining
+  // secure (OWASP minimum). Hashes store their own cost, so older
+  // cost-12 hashes keep verifying unchanged.
+  const passwordHash = await bcrypt.hash(password, 10);
   await db.user.create({
     data: {
       name: name ?? null,

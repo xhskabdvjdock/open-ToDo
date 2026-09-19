@@ -39,6 +39,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) return null;
 
+        // Transparently upgrade older cost-12 hashes to cost-10 so future
+        // logins stay fast on serverless CPUs. Fire-and-forget.
+        try {
+          if (bcrypt.getRounds(user.passwordHash) > 10) {
+            const upgraded = await bcrypt.hash(password, 10);
+            void db.user
+              .update({ where: { id: user.id }, data: { passwordHash: upgraded } })
+              .catch(() => undefined);
+          }
+        } catch {
+          // Never block login on the upgrade.
+        }
+
         return {
           id: user.id,
           name: user.name,
