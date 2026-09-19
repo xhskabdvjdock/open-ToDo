@@ -30,17 +30,22 @@ export async function register(input: unknown): Promise<ActionResult<{ email: st
   if (!parsed.success) {
     return fail(parsed.error.issues[0]?.message ?? a.invalidInput);
   }
-  const { name, email, password, timezone } = parsed.data;
+  const { name, username, email, password, timezone } = parsed.data;
 
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) {
     return fail(a.emailExists);
+  }
+  const nameTaken = await db.user.findUnique({ where: { username } });
+  if (nameTaken) {
+    return fail(a.usernameTaken);
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
   await db.user.create({
     data: {
       name: name ?? null,
+      username,
       email,
       passwordHash,
       timezone: timezone && isValidTimeZone(timezone) ? timezone : "UTC",

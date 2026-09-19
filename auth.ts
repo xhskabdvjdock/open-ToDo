@@ -17,7 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email" },
+        identifier: { label: "Email or username", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(raw) {
@@ -29,9 +29,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
         const parsed = getSchemas(locale).loginSchema.safeParse(raw);
         if (!parsed.success) return null;
-        const { email, password } = parsed.data;
+        const { identifier, password } = parsed.data;
 
-        const user = await db.user.findUnique({ where: { email } });
+        // Email login if it looks like an email, otherwise username login.
+        const user = identifier.includes("@")
+          ? await db.user.findUnique({ where: { email: identifier.toLowerCase() } })
+          : await db.user.findUnique({ where: { username: identifier.toLowerCase() } });
         if (!user) return null;
         const ok = await bcrypt.compare(password, user.passwordHash);
         if (!ok) return null;
@@ -51,11 +54,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token.sub && (trigger === "signIn" || trigger === "update")) {
         const fresh = await db.user.findUnique({
           where: { id: token.sub },
-          select: { name: true, email: true, timezone: true },
+          select: { name: true, email: true, username: true, timezone: true },
         });
         if (fresh) {
           token.name = fresh.name;
           token.email = fresh.email;
+          (token as { username?: string | null }).username = fresh.username;
           (token as { timezone?: string }).timezone = fresh.timezone;
         }
       }
@@ -64,6 +68,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (session.user && token.sub) {
         session.user.id = token.sub;
+        (session.user as { username?: string | null }).username =
+          (token as { username?: string | null }).username ?? null;
         (session.user as { timezone?: string }).timezone =
           (token as { timezone?: string }).timezone ?? "UTC";
       }

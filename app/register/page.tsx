@@ -23,6 +23,7 @@ export default function RegisterPage() {
   const a = t.auth;
   const router = useRouter();
   const [name, setName] = React.useState("");
+  const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
@@ -34,6 +35,7 @@ export default function RegisterPage() {
     setPending(true);
     const res = await register({
       name: name.trim() === "" ? undefined : name.trim(),
+      username: username.trim(),
       email: email.trim(),
       password,
       timezone: detectTimezone(),
@@ -45,7 +47,7 @@ export default function RegisterPage() {
     }
     // Account created — sign the user in immediately.
     const login = await signIn("credentials", {
-      email: email.trim(),
+      identifier: email.trim(),
       password,
       redirect: false,
     });
@@ -95,6 +97,20 @@ export default function RegisterPage() {
                 placeholder="you@example.com"
                 required
                 maxLength={254}
+              />
+            </Field>
+            <Field label={a.username} htmlFor="register-username" hint={a.usernameHint} required>
+              <Input
+                id="register-username"
+                type="text"
+                autoComplete="username"
+                dir="ltr"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder={a.usernamePh}
+                required
+                minLength={3}
+                maxLength={20}
               />
             </Field>
             <Field label={a.password} htmlFor="register-password" hint={a.passwordHint} required>

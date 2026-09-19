@@ -29,7 +29,11 @@ export default async function SettingsPage() {
       <PageHeader title={s.title} description={s.desc} />
       <div className="space-y-3">
         <Card title={s.profile} description={s.profileDesc}>
-          <ProfileForm initialName={user.name ?? ""} initialTimezone={user.timezone} />
+          <ProfileForm
+            initialName={user.name ?? ""}
+            initialUsername={user.username ?? ""}
+            initialTimezone={user.timezone}
+          />
         </Card>
         <Card title={s.appearance} description={s.appearanceDesc}>
           <ThemeSetting />

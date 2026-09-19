@@ -57,10 +57,11 @@ function tzLabel(tz: { value: string; ar: string; en: string }, locale: Locale):
 
 const KNOWN = new Set(TIMEZONES.map((tz) => tz.value));
 
-export function ProfileForm({ initialName, initialTimezone }: { initialName: string; initialTimezone: string }) {
+export function ProfileForm({ initialName, initialUsername, initialTimezone }: { initialName: string; initialUsername: string; initialTimezone: string }) {
   const { locale, t } = useLocale();
   const s = t.settings;
   const [name, setName] = React.useState(initialName);
+  const [username, setUsername] = React.useState(initialUsername);
   const [timezone, setTimezone] = React.useState(
     KNOWN.has(initialTimezone) ? initialTimezone : "OTHER",
   );
@@ -75,7 +76,11 @@ export function ProfileForm({ initialName, initialTimezone }: { initialName: str
     setSaving(true);
     setError(null);
     const tz = timezone === "OTHER" ? customTz.trim() : timezone;
-    const res = await updateProfile({ name: name.trim() === "" ? undefined : name.trim(), timezone: tz });
+    const res = await updateProfile({
+      name: name.trim() === "" ? undefined : name.trim(),
+      username: username.trim() === "" ? undefined : username.trim(),
+      timezone: tz,
+    });
     setSaving(false);
     if (!res.ok) {
       setError(res.error);
@@ -94,6 +99,21 @@ export function ProfileForm({ initialName, initialTimezone }: { initialName: str
           maxLength={50}
           placeholder={s.namePh}
           autoComplete="name"
+        />
+      </Field>
+      <Field
+        label={t.auth.username}
+        htmlFor="settings-username"
+        hint={t.auth.usernameHint}
+      >
+        <Input
+          id="settings-username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          maxLength={20}
+          placeholder={t.auth.usernamePh}
+          autoComplete="username"
+          dir="ltr"
         />
       </Field>
       <Field label={s.timezone} htmlFor="settings-tz" hint={s.timezoneHint}>

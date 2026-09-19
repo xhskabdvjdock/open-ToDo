@@ -44,15 +44,25 @@ export const projectIconSchema = z.enum(PROJECT_ICONS);
 export function getSchemas(locale: Locale) {
   const v: Dict["validation"] = (locale === "en" ? en : ar).validation;
 
+  const usernameRule = z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(3, v.usernameShort)
+    .max(20, v.usernameLong)
+    .regex(/^[a-z0-9_]+$/, v.usernameInvalid);
+
   const registerSchema = z.object({
     name: z.string().trim().max(50, v.nameLong).optional().transform((x) => (x === "" ? undefined : x)),
+    username: usernameRule,
     email: z.string().trim().toLowerCase().email(v.emailBad).max(254),
     password: z.string().min(8, v.pwShort).max(128),
     timezone: z.string().trim().min(1).max(64).optional().default("UTC"),
   });
 
   const loginSchema = z.object({
-    email: z.string().trim().toLowerCase().email(v.emailBad),
+    /** Email address or username — resolved server-side. */
+    identifier: z.string().trim().min(1, v.identifierRequired),
     password: z.string().min(1, v.pwRequired),
   });
 
@@ -110,6 +120,7 @@ export function getSchemas(locale: Locale) {
 
   const profileSchema = z.object({
     name: z.string().trim().max(50, v.nameLong).optional().transform((x) => (x === "" ? undefined : x)),
+    username: usernameRule.optional(),
     timezone: z.string().trim().min(1, v.tzRequired).max(64),
   });
 

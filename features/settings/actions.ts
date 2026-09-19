@@ -31,9 +31,20 @@ export async function updateProfile(input: unknown): Promise<ActionResult<null>>
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? a.invalidInput);
   if (!isValidTimeZone(parsed.data.timezone)) return fail(a.unknownTz);
 
+  if (parsed.data.username) {
+    const taken = await db.user.findFirst({
+      where: { username: parsed.data.username, id: { not: user.id } },
+    });
+    if (taken) return fail(a.usernameTaken);
+  }
+
   await db.user.update({
     where: { id: user.id },
-    data: { name: parsed.data.name ?? null, timezone: parsed.data.timezone },
+    data: {
+      name: parsed.data.name ?? null,
+      username: parsed.data.username ?? undefined,
+      timezone: parsed.data.timezone,
+    },
   });
   revalidatePath("/", "layout");
   return { ok: true, data: null };

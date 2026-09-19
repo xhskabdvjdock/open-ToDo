@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const userId = session.user.id;
   const user = await db.user.findUnique({
     where: { id: userId },
-    select: { name: true, email: true, timezone: true },
+    select: { name: true, email: true, username: true, timezone: true },
   });
   if (!user) redirect("/login");
   const timezone = user.timezone || "UTC";
@@ -67,7 +67,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <AppShell
-      user={{ name: user.name, email: user.email }}
+      user={{ name: user.name, email: user.email, username: user.username }}
       timezone={timezone}
       counts={{ inbox, today, upcoming, completed }}
       projects={projects.map((p) => ({

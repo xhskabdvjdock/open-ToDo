@@ -13,7 +13,7 @@ export default function LoginPage() {
   const { t } = useLocale();
   const a = t.auth;
   const router = useRouter();
-  const [email, setEmail] = React.useState("");
+  const [identifier, setIdentifier] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
   const [pending, setPending] = React.useState(false);
@@ -23,15 +23,18 @@ export default function LoginPage() {
     setError(null);
     setPending(true);
     const res = await signIn("credentials", {
-      email: email.trim(),
+      identifier: identifier.trim(),
       password,
       redirect: false,
     });
     setPending(false);
     if (!res || res.error) {
-      // "CredentialsSignin" means wrong email/password. Any other error
-      // means the sign-in service itself failed (misconfiguration/network).
-      setError(res && res.error !== "CredentialsSignin" ? a.authError : a.invalidCreds);
+      if (!res || res.error === "CredentialsSignin") {
+        // Match the message to what the user typed (email vs username).
+        setError(identifier.includes("@") ? a.invalidCreds : a.invalidCredsUser);
+      } else {
+        setError(a.authError);
+      }
       return;
     }
     router.push("/dashboard");
@@ -53,15 +56,15 @@ export default function LoginPage() {
             {a.loginSub}
           </p>
           <form onSubmit={submit} className="mt-5 space-y-4">
-            <Field label={a.email} htmlFor="login-email" required>
+            <Field label={a.identifier} htmlFor="login-identifier" required>
               <Input
-                id="login-email"
-                type="email"
-                autoComplete="email"
+                id="login-identifier"
+                type="text"
+                autoComplete="username"
                 dir="ltr"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
+                placeholder={a.identifierPh}
                 required
                 maxLength={254}
               />

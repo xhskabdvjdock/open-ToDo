@@ -102,7 +102,7 @@ export function AppHeader({
   user,
   onMenu,
 }: {
-  user: { name?: string | null; email?: string | null };
+  user: { name?: string | null; email?: string | null; username?: string | null };
   onMenu: () => void;
 }) {
   const { t } = useLocale();
@@ -171,6 +171,11 @@ export function AppHeader({
                 <p className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-100">
                   {user.name ?? t.header.account}
                 </p>
+                {user.username ? (
+                  <p className="truncate text-xs text-zinc-500 dark:text-zinc-400" dir="ltr">
+                    @{user.username}
+                  </p>
+                ) : null}
                 <p className="truncate text-xs text-zinc-500 dark:text-zinc-400" dir="ltr">{user.email}</p>
               </div>
               <Link

@@ -8,7 +8,7 @@ export async function currentUser() {
   if (!session?.user?.id) redirect("/login");
   const user = await db.user.findUnique({
     where: { id: session.user.id },
-    select: { id: true, name: true, email: true, timezone: true },
+    select: { id: true, name: true, email: true, username: true, timezone: true },
   });
   if (!user) redirect("/login");
   return { ...user, timezone: user.timezone || "UTC" };

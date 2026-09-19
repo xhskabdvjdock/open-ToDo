@@ -26,7 +26,7 @@ export function AppShell({
   tags,
 }: {
   children: React.ReactNode;
-  user: { name?: string | null; email?: string | null };
+  user: { name?: string | null; email?: string | null; username?: string | null };
   timezone: string;
   counts: SidebarCounts;
   projects: SidebarProject[];
