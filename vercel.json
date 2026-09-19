@@ -1,8 +1,0 @@
-{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  // Run server functions in Hong Kong (hkg1) — the closest Vercel region to
-  // the Supabase database (ap-northeast-1, Tokyo). Every task mutation makes
-  // several sequential DB round-trips, so minimizing server→DB latency is
-  // what makes the app feel instant instead of heavy.
-  "regions": ["hkg1"]
-}
