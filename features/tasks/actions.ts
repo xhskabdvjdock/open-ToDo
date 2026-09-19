@@ -26,20 +26,11 @@ async function strings() {
 }
 
 function revalidateApp() {
-  // Mutations that change counts/statuses: revalidate the whole
-  // authenticated layout so sidebar counts, lists and stats never go stale.
+  // Revalidate the whole authenticated layout after every mutation so
+  // sidebar counts, lists and stats never go stale. (All workspace routes
+  // are dynamic per-request renders, so this is also what refreshes the
+  // current view immediately after each action.)
   revalidatePath("/", "layout");
-}
-
-function revalidateTaskPages() {
-  // Content-only changes (text, order, priority…): refresh every task list
-  // WITHOUT refetching the sidebar layout (counts/projects/tags), which is
-  // the expensive part of each server round-trip.
-  for (const p of ["/dashboard", "/inbox", "/today", "/upcoming", "/completed", "/search"]) {
-    revalidatePath(p);
-  }
-  revalidatePath("/projects", "page");
-  revalidatePath("/projects/[id]", "page");
 }
 
 type TaskWithRelations = Prisma.TaskGetPayload<{
@@ -239,10 +230,7 @@ export async function updateTask(input: unknown): Promise<ActionResult<{ id: str
       : []),
   ]);
 
-  // Status changes move tasks between views/counts → full revalidation.
-  // Pure content edits only refresh the lists (sidebar stays cached).
-  if (nextStatus !== existing.status) revalidateApp();
-  else revalidateTaskPages();
+  revalidateApp();
   return { ok: true, data: { id } };
 }
 
@@ -435,8 +423,7 @@ export async function reorderTask(input: unknown): Promise<ActionResult<{ id: st
   else order = await nextOrder(user.id);
 
   await db.task.update({ where: { id }, data: { order } });
-  // Order never changes counts — lists only, sidebar stays cached.
-  revalidateTaskPages();
+  revalidateApp();
   return { ok: true, data: { id } };
 }
 
